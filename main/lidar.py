@@ -7,6 +7,8 @@ import math
 import socket
 from _thread import *
 
+from math import radians
+
 HOST = '127.0.0.1'
 PORT = 8000
 data = None
@@ -44,8 +46,6 @@ def recv_data(client_socket) :
         print("recive : ",repr(data.decode()))
 start_new_thread(recv_data, (client_socket,))
 print ('>> Connect Server')
-
-
 
 # 전방 라이다 sensing
 # type: True -> 스캔 각도 제한
@@ -146,46 +146,50 @@ if __name__ == '__main__':
         back_scan = ydlidar.LaserScan()
 
         while ret1 and ret2 and ydlidar.os_isOk():
-            receiveLidarValue_front()
-            receiveLidarValue_back()
+            receiveLidarValue_front(limit=1.5)
+            receiveLidarValue_back(limit=1.5)
+
             front_x, front_y = changeToXY(front_ran,front_angle,front_size)
             back_x, back_y = changeToXY(back_ran,back_angle,back_size)
 
+            left_0_30 = []
+            left_30_60 = []
+            left_60_90 = []
 
-            # Local Plan using Lidar
-            front_right_circle = (front_x+0.4)**2+(front_y+0.3)**2
-            front_left_circle = (front_x+0.4)**2+(front_y-0.3)**2
+            right_0_30 = []
+            right_30_60 = []
+            right_60_90 = []
 
-            back_right_circle = (back_x-0.2)**2+(back_y+0.3)**2
-            back_left_circle = (back_x-0.2)**2+(back_y-0.3)**2
+            for j, i in zip(front_ran, front_angle):
+                if i >= radians(90) or i <= radians(-90) or j > 1.5:
+                    continue
 
-            if data != None:
-                # front
-                if np.any(front_right_circle < (0.85)**2 ) and np.any(front_left_circle < (0.85)**2) and np.any(front_y<-0.5) and np.any(front_y>0.5):
-                    if data_sig != 2:
-                        print("bbb")
-                        client_socket.send('fb'.encode())
-                        data_sig = 2
+                if i >= radians(-90) and i <= radians(-60):
+                    left_60_90.append(j)
+                if i >= radians(-60) and i <= radians(-30):
+                    left_30_60.append(j)
+                if i >= radians(-30) and i <= radians(-0.0):
+                    left_0_30.append(j)
 
-                elif np.any(front_right_circle < (0.85)**2) and np.any(front_left_circle > (0.85)**2) and np.any(front_y<-0.5) and np.any(front_y>0.5) :
-                    if data_sig != 4:
-                        print("llll")
-                        client_socket.send('fl'.encode())
-                        data_sig = 4
+                if i >= radians(+0.0) and i <= radians(30):
+                    right_0_30.append(j)
+                if i >= radians(30) and i <= radians(60):
+                    right_30_60.append(j)
+                if i >= radians(60) and i <= radians(90):
+                    right_60_90.append(j)
 
-                elif np.any(front_right_circle > (0.85)**2) and np.any(front_left_circle < (0.85)**2) and np.any(front_y<-0.5) and np.any(front_y>0.5):
-                    if data_sig != 3:
-                        print("rrrr")
-                        client_socket.send('fr'.encode())
-                        data_sig = 3
 
-                # target
-                else:
-                    if data_sig != 1:
-                        client_socket.send(data)
-                        data_sig = 1
-                    else:
-                        pass
+            left_0, left_1, left_2 = min(left_0_30), min(left_30_60), min(left_60_90)
+            right_0, right_1, right_2 = min(right_0_30), min(right_30_60), min(right_60_90)
+
+            left_index = (2 * right_0 + right_1 + 0.3 * right_2) / (2 + 1 + 0.3) 
+            right_index = (2 * left_0 + left_1 + 0.3 * left_2) / (2 + 1 + 0.3)
+
+            left_direction = left_index - 1.5
+            right_direction = right_index - 1.5
+
+            print(f'left_motor is {left_direction * 20}')
+            print(f'right_motor is {right_direction * 20}')
 
 
         ret1 = laser_front.turnOff()
