@@ -161,8 +161,10 @@ if __name__ == '__main__':
             right_60_90 = []
 
             for j, i in zip(front_ran, front_angle):
-                if i >= radians(90) or i <= radians(-90) or j > 1.5:
+                if i >= radians(90) or i <= radians(-90):
                     continue
+                if j > 1.5:
+                    j = 1.5
 
                 if i >= radians(-90) and i <= radians(-60):
                     left_60_90.append(j)
@@ -179,8 +181,9 @@ if __name__ == '__main__':
                     right_60_90.append(j)
 
 
-            left_0, left_1, left_2 = min(left_0_30), min(left_30_60), min(left_60_90)
-            right_0, right_1, right_2 = min(right_0_30), min(right_30_60), min(right_60_90)
+            if len(left_0_30) != 0:
+                left_0, left_1, left_2 = min(left_0_30), min(left_30_60), min(left_60_90)
+                right_0, right_1, right_2 = min(right_0_30), min(right_30_60), min(right_60_90)
 
             left_index = (2 * right_0 + right_1 + 0.3 * right_2) / (2 + 1 + 0.3) 
             right_index = (2 * left_0 + left_1 + 0.3 * left_2) / (2 + 1 + 0.3)
