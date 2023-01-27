@@ -135,7 +135,7 @@ def changeToXY(ran,angle,size):
 
 
 if __name__ == '__main__':
-    
+
     ret1 = laser_front.initialize()
     ret2 = laser_back.initialize()
 
@@ -224,8 +224,8 @@ if __name__ == '__main__':
 
                 if j < 0:
                     print('err')
-                    
-            
+
+
             if len(front_left_0_30) != 0 and len(front_left_30_60) != 0 and len(front_left_60_90) != 0 and len(front_right_0_30) != 0 and len(front_right_30_60) != 0 and len(front_right_60_90) != 0\
                 and len(back_left_0_30) != 0 and len(back_left_30_60) != 0 and len(back_left_60_90) != 0 and len(back_right_0_30) != 0 and len(back_right_30_60) != 0 and len(back_right_60_90) != 0:
                 front_left_0, front_left_1, front_left_2 = min(front_left_0_30), min(front_left_30_60), min(front_left_60_90)
@@ -233,20 +233,21 @@ if __name__ == '__main__':
 
                 back_left_0, back_left_1, back_left_2 = min(back_left_0_30), min(back_left_30_60), min(back_left_60_90)
                 back_right_0, back_right_1, back_right_2 = min(back_right_0_30), min(back_right_30_60), min(back_right_60_90)
-                
-                front_left_index = (2 * front_right_0 + front_right_1 + 0.3 * front_right_2) / (2 + 1 + 0.3) 
+
+                front_left_index = (2 * front_right_0 + front_right_1 + 0.3 * front_right_2) / (2 + 1 + 0.3)
                 front_right_index = (2 * front_left_0 + front_left_1 + 0.3 * front_left_2) / (2 + 1 + 0.3)
-                
-                back_left_index = (2 * back_right_0 + back_right_1 + 0.3 * back_right_2) / (2 + 1 + 0.3) 
+
+                back_left_index = (2 * back_right_0 + back_right_1 + 0.3 * back_right_2) / (2 + 1 + 0.3)
                 back_right_index = (2 * back_left_0 + back_left_1 + 0.3 * back_left_2) / (2 + 1 + 0.3)
 
                 front_left_direction = 1.5 - front_left_index
                 front_right_direction = 1.5 - front_right_index
 
+                # 물체가 가까이 있을 수록 direction 값이 커짐, 1.5m내에 장애물이 없으면 0
                 back_left_direction = 1.5 - back_left_index
                 back_right_direction = 1.5 - back_right_index
 
-                
+
 
                 front_left_vel_sum = front_left_vel_sum + front_left_direction
                 front_left_cnt = front_left_cnt + 1
@@ -256,11 +257,11 @@ if __name__ == '__main__':
                 back_left_cnt = back_left_cnt + 1
                 back_right_vel_sum = back_right_vel_sum + back_right_direction
 
-                if front_left_cnt >= 2 and back_left_cnt >= 2: 
-                    front_left_vel = f'FL{int((front_left_vel_sum/front_left_cnt) * 30)} '
-                    front_right_vel = f'FR{int((front_right_vel_sum/front_left_cnt) * 30)} '
-                    back_left_vel = f'BL{int((back_left_vel_sum/back_left_cnt) * -30)} '
-                    back_right_vel = f'BR{int((back_right_vel_sum/back_left_cnt) * -30)} '
+                if front_left_cnt >= 2 and back_left_cnt >= 2:
+                    front_left_vel = f'FL{int((front_left_vel_sum/front_left_cnt) * 10)}  '
+                    front_right_vel = f'FR{int((front_right_vel_sum/front_left_cnt) * 10)}  '
+                    back_left_vel = f'BL{int((back_left_vel_sum/back_left_cnt) * 10)}  '
+                    back_right_vel = f'BR{int((back_right_vel_sum/back_left_cnt) * 10)}  '
 
                     client_socket.send(front_left_vel.encode())
                     client_socket.send(front_right_vel.encode())

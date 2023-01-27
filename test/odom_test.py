@@ -84,7 +84,7 @@ def target_odo_move():
     global sig
     global data
 
-    global left_vel  
+    global left_vel
     global right_vel
 
     global fleft_vel_dodge
@@ -92,75 +92,63 @@ def target_odo_move():
     global bleft_vel_dodge
     global bright_vel_dodge
 
-    awef = True
-
     recieved_fl = False
     recieved_fr = False
     recieved_bl = False
     recieved_br = False
 
+    noerr = False
+
     # if py_serial.readable():
     #     response = py_serial.readline()
     # print(response)
-    
+
     if data != None:
         commend = data.decode()
         text= response.decode()
         m=[float(s) for s in re.findall(r'-?\d+\.?\d*', text)]#문자열에서 숫자추출
         print(commend)
         if 'FL' in commend:
-            fleft_vel_dodge = int(commend.split('FL')[1].split(' ')[0])
+            fleft_vel_dodge = int(commend.split('FL')[1].split('  ')[0])
             recieved_fl = True
-            awef = False
         else:
+            fleft_vel_dodge = 0
             recieved_fl = False
-            awef = True
 
         if 'FR' in commend:
-            fright_vel_dodge = int(commend.split('FR')[1].split(' ')[0])
+            fright_vel_dodge = int(commend.split('FR')[1].split('  ')[0])
             recieved_fr = True
-            awef = False
-            
+
         else:
+            fright_vel_dodge = 0
             recieved_fr = False
-            awef = True
 
         if 'BL' in commend:
-            bleft_vel_dodge = int(commend.split('BL')[1].split(' ')[0])
+            bleft_vel_dodge = int(commend.split('BL')[1].split('  ')[0])
             recieved_bl = True
-            awef = False
         else:
+            bleft_vel_dodge = 0
             recieved_bl = False
-            awef = True
 
         if 'BR' in commend:
-            bright_vel_dodge = int(commend.split('BR')[1].split(' ')[0])
+            bright_vel_dodge = int(commend.split('BR')[1].split('  ')[0])
             recieved_br = True
-            awef = False
-            
-        else:
-            recieved_br = False
-            awef = True
-        
-        if recieved_fl and recieved_fr and (not recieved_bl) and (not recieved_br) and (fright_vel_dodge > 0 or fleft_vel_dodge > 0):
-            print(f'front-> l : {fleft_vel_dodge}, r : {fright_vel_dodge}')
-            go(1.2*fright_vel_dodge-0.8*fleft_vel_dodge, 1.2*fleft_vel_dodge-0.8*fright_vel_dodge)
-            ta=[]
 
-        elif recieved_bl and recieved_br and (not recieved_fl) and (not recieved_fr) and(bright_vel_dodge > 0 or bleft_vel_dodge > 0):
-            print(f'back-> l : {bleft_vel_dodge}, r : {bright_vel_dodge}')
-            go(1.2*bright_vel_dodge-0.8*bleft_vel_dodge, 1.2*bleft_vel_dodge-0.8*bright_vel_dodge)
-            ta=[]
-            
-            
+        else:
+            bright_vel_dodge = 0
+            recieved_br = False
+
+        if recieved_fl and recieved_fr and recieved_bl and recieved_br:
+            noerr = True
+
+
         if len(m) == 5:
             now_x, now_y=m[2],m[3]
             now_theta=m[4]
 
             ta=[float(tas) for tas in re.findall(r'-?\d+\.?\d*', commend)]#문자열에서 숫자추출
-            
-            
-            if (len(ta) == 2) and awef:
+
+            if (len(ta) == 2) and noerr:
                 target_x,target_y = ta[0],ta[1]
                 target_theta=math.atan((target_y-now_y)/(target_x-now_x))*180/PI#각도구하기 '도'
                 dist = ((((target_x-now_x)**2)+((target_y-now_y)**2))**(1/2))
@@ -172,7 +160,7 @@ def target_odo_move():
                 elif now_theta < -reset_degree:
                     for i in range(int((now_theta)/(-reset_degree))):
                         now_theta = now_theta+reset_degree*(i+1)
-                
+
                 # 뒤로가기
                 if ((target_x-now_x)<0):
                     if dist >5:
@@ -194,7 +182,7 @@ def target_odo_move():
                                 print("lll")
                         else:
                             if sig != 3:
-                                go(-20, -20)
+                                go(-20-bleft_vel_dodge, -20-bright_vel_dodge)
                                 sig = 3
                             else:
                                 print("ggg")
@@ -204,6 +192,7 @@ def target_odo_move():
                                 sig = 4
                             else:
                                 print("ststst")
+
                 # 앞으로가기
                 elif((target_x-now_x)>=0):
                     if dist >5:
@@ -225,7 +214,7 @@ def target_odo_move():
                                 print("lll")
                         else:
                             if sig != 3:
-                                go(20, 20)
+                                go(20+fleft_vel_dodge, 20+fright_vel_dodge)
                                 sig = 3
                             else:
                                 print("ggg")
@@ -240,9 +229,9 @@ def target_odo_move():
             #         arco_x, arco_y, arco_t = ta[0], ta[1], ta[2]
             #         now_munja=f'x {arco_x} y {arco_y} t {arco_t}'
             #         py_serial.write(now_munja.encode())
-            
+
 if __name__ == "__main__":
-    
+
     #
     while True:
         thread1 = threading.Thread(target=read_from_arduino, daemon=True)
@@ -252,7 +241,6 @@ if __name__ == "__main__":
         #target_odo_move()
         thread1.join(timeout = 1)
         #thread2.join()
-        
-    
+
 
 client_socket.close()

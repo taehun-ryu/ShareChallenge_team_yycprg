@@ -120,7 +120,7 @@ def target_odo_move():
         m=[float(s) for s in re.findall(r'-?\d+\.?\d*', text)]#문자열에서 숫자추출
         print(commend)
         if 'LL' in commend:
-            left_vel_dodge = int(commend.split('LL')[1].split(' ')[0])
+            left_vel_dodge = int(commend.split('LL')[1].split('  ')[0])
             recieved_l = True
             awef = False
         else:
@@ -128,7 +128,7 @@ def target_odo_move():
             awef = True 
 
         if 'RR' in commend:
-            right_vel_dodge = int(commend.split('RR')[1].split(' ')[0])
+            right_vel_dodge = int(commend.split('RR')[1].split('  ')[0])
             recieved_r = True
             awef = False
             
