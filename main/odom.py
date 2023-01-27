@@ -31,6 +31,13 @@ py_serial = serial.Serial(
     # 보드 레이트 (통신 속도)
     baudrate=115200,
 )
+py_serial2 = serial.Serial(
+    # Window
+    port='/dev/ttyACM0',
+    # 보드 레이트 (통신 속도)
+    baudrate=115200,
+)
+   
 
 HOST = '127.0.0.1'
 PORT = 8000
@@ -57,17 +64,28 @@ def recv_data(client_socket) :
 start_new_thread(recv_data, (client_socket,))
 print ('>> Connect Server')
 
-def read_from_arduino():
+# def read_from_arduino():
+#     while True:
+#         global left_vel
+#         global right_vel
+#         global response
+#         if py_serial.readable():
+#             response = py_serial.readline()
+#         #b's:  0.00     S:  0.00     nowx:  0.00     nowy:  0.00     now_theta:  0.00\r\n'
+#         print(response)
+#         target_odo_move()
+#         send(left_vel, right_vel)
+
+def read_from_arduino2():
+    global left_vel
+    global right_vel
+    global response
     while True:
-        global left_vel
-        global right_vel
-        global response
-        if py_serial.readable():
-            response = py_serial.readline()
-        #b's:  0.00     S:  0.00     nowx:  0.00     nowy:  0.00     now_theta:  0.00\r\n'
-        print(response)
-        target_odo_move()
-        send(left_vel, right_vel)
+        if py_serial2.readable():
+            response = py_serial2.readline()
+            print(response)
+        else:
+            pass
 
 def go(s, S):
     global left_vel
@@ -107,7 +125,7 @@ def target_odo_move():
             awef = False
         else:
             recieved_l = False
-            awef = True
+            awef = True 
 
         if 'RR' in commend:
             right_vel_dodge = int(commend.split('RR')[1].split(' ')[0])
@@ -215,7 +233,7 @@ if __name__ == "__main__":
     
     #
     while True:
-        thread1 = threading.Thread(target=read_from_arduino, daemon=True)
+        thread1 = threading.Thread(target=read_from_arduino2, daemon=True)
         #thread2 = threading.Thread(target=target_odo_move, daemon=True)
         thread1.start()
         #thread2.start()
