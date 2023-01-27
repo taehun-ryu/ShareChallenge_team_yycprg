@@ -259,8 +259,8 @@ if __name__ == '__main__':
                 if front_left_cnt >= 2 and back_left_cnt >= 2: 
                     front_left_vel = f'FL{int((front_left_vel_sum/front_left_cnt) * 30)} '
                     front_right_vel = f'FR{int((front_right_vel_sum/front_left_cnt) * 30)} '
-                    back_left_vel = f'BL{int((back_left_vel_sum/back_left_cnt) * 30)} '
-                    back_right_vel = f'BR{int((back_right_vel_sum/back_left_cnt) * 30)} '
+                    back_left_vel = f'BL{int((back_left_vel_sum/back_left_cnt) * -30)} '
+                    back_right_vel = f'BR{int((back_right_vel_sum/back_left_cnt) * -30)} '
 
                     client_socket.send(front_left_vel.encode())
                     client_socket.send(front_right_vel.encode())
