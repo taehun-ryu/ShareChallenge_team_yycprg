@@ -184,6 +184,7 @@ def target_odo_move():
                                 go(left_vel_dodge,right_vel_dodge)
                             else:
                                 go(10, -10)
+
                             sig = 1
                         else:
                             print("rrr")
@@ -195,12 +196,14 @@ def target_odo_move():
                                 go(left_vel_dodge,right_vel_dodge)
                             else:
                                 go(-10, 10)
+
                             sig = 2
                         else:
                             print("lll")
                     else:
                         if sig != 3:
                             go(20+left_vel_dodge, 20+right_vel_dodge)
+
                             sig = 3
                         else:
                             print("ggg")
