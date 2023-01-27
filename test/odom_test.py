@@ -21,15 +21,13 @@ now_y = 0
 left_vel = 0
 right_vel = 0
 
-fleft_vel_dodge = 0
-fright_vel_dodge = 0
-bleft_vel_dodge = 0
-bright_vel_dodge = 0
+left_vel_dodge = 0
+right_vel_dodge = 0
 
 PI=math.pi
 py_serial = serial.Serial(
     # Window
-    port='/dev/ttyACM1',
+    port='/dev/ttyACM0',
     # 보드 레이트 (통신 속도)
     baudrate=115200,
 )
@@ -39,6 +37,7 @@ py_serial2 = serial.Serial(
     # 보드 레이트 (통신 속도)
     baudrate=115200,
 )
+
 
 HOST = '127.0.0.1'
 PORT = 8000
@@ -65,7 +64,19 @@ def recv_data(client_socket) :
 start_new_thread(recv_data, (client_socket,))
 print ('>> Connect Server')
 
-def read_from_arduino():
+# def read_from_arduino():
+#     while True:
+#         global left_vel
+#         global right_vel
+#         global response
+#         if py_serial.readable():
+#             response = py_serial.readline()
+#         #b's:  0.00     S:  0.00     nowx:  0.00     nowy:  0.00     now_theta:  0.00\r\n'
+#         print(response)
+#         target_odo_move()
+#         send(left_vel, right_vel)
+
+def read_from_arduino2():
     global left_vel
     global right_vel
     global response
@@ -92,15 +103,11 @@ def target_odo_move():
     global left_vel
     global right_vel
 
-    global fleft_vel_dodge
-    global fright_vel_dodge
-    global bleft_vel_dodge
-    global bright_vel_dodge
+    global left_vel_dodge
+    global right_vel_dodge
 
-    recieved_fl = False
-    recieved_fr = False
-    recieved_bl = False
-    recieved_br = False
+    recieved_l = False
+    recieved_r = False
 
     noerr = False
 
@@ -113,41 +120,32 @@ def target_odo_move():
         text= response.decode()
         m=[float(s) for s in re.findall(r'-?\d+\.?\d*', text)]#문자열에서 숫자추출
         print(commend)
-        if 'FL' in commend:
-            fleft_vel_dodge = int(commend.split('FL')[1].split('  ')[0])
-            recieved_fl = True
+        if 'LL' in commend:
+            left_vel_dodge = int(commend.split('LL')[1].split('  ')[0])
+            recieved_l = True
         else:
-            fleft_vel_dodge = 0
-            recieved_fl = False
+            left_vel_dodge = 0
+            recieved_l = False
 
-        if 'FR' in commend:
-            fright_vel_dodge = int(commend.split('FR')[1].split('  ')[0])
-            recieved_fr = True
-
-        else:
-            fright_vel_dodge = 0
-            recieved_fr = False
-
-        if 'BL' in commend:
-            bleft_vel_dodge = int(commend.split('BL')[1].split('  ')[0])
-            recieved_bl = True
-        else:
-            bleft_vel_dodge = 0
-            recieved_bl = False
-
-        if 'BR' in commend:
-            bright_vel_dodge = int(commend.split('BR')[1].split('  ')[0])
-            recieved_br = True
+        if 'RR' in commend:
+            right_vel_dodge = int(commend.split('RR')[1].split('  ')[0])
+            recieved_r = True
 
         else:
-            bright_vel_dodge = 0
-            recieved_br = False
+            right_vel_dodge = 0
+            recieved_r = False
 
-        if recieved_fl and recieved_fr and recieved_bl and recieved_br:
+        if 'BB' in commend:
+            recieved_b = True
+            back_ran = int(commend.split('BB')[1].split('  ')[0])
+        else:
+            recieved_b = False
+
+        # LL, RR ,BB 가 전부 잘 들어왔는지 확인.
+        if recieved_l and recieved_r and recieved_b:
             noerr = True
         else:
             noerr = False
-
 
         if len(m) == 5:
             now_x, now_y=m[2],m[3]
@@ -160,77 +158,43 @@ def target_odo_move():
                 target_theta=math.atan((target_y-now_y)/(target_x-now_x))*180/PI#각도구하기 '도'
                 dist = ((((target_x-now_x)**2)+((target_y-now_y)**2))**(1/2))
                 #######################################
-                reset_degree = float(360)
-                if now_theta > reset_degree:
-                    for i in range(int((now_theta)/reset_degree)):
-                        now_theta = now_theta-reset_degree*(i+1)
-                elif now_theta < -reset_degree:
-                    for i in range(int((now_theta)/(-reset_degree))):
-                        now_theta = now_theta+reset_degree*(i+1)
+                theta_diff = target_theta - now_theta
+                # 전방에 장애물이 있는지 없는지 판단.
+                front_unclear:bool = recieved_l and recieved_r and (right_vel_dodge > 0 or left_vel_dodge > 0)
 
-                # 뒤로가기
-                if ((target_x-now_x)<0):
-                    if dist >5:
-                        if ((target_theta-now_theta)>5):
-                            if sig != 1:
-                                go(0,0)
-                                time.sleep(0.4)
-                                go(20, -20)
-                                sig = 1
-                            else:
-                                print("rrr")
-                        elif((target_theta-now_theta)<-5):
-                            if sig != 2:
-                                go(0,0)
-                                time.sleep(0.4)
-                                go(-20,20)
-                                sig = 2
-                            else:
-                                print("lll")
-                        else:
-                            if sig != 3:
-                                go(-20-(1.2*bright_vel_dodge-0.8*bleft_vel_dodge), -20-(1.2*bright_vel_dodge-0.8*bleft_vel_dodge))
-                                sig = 3
-                            else:
-                                print("ggg")
-                    else:
-                            if sig != 4:
-                                go(0, 0)
-                                sig = 4
-                            else:
-                                print("ststst")
+                if dist >5:
+                    if front_unclear:
+                        print(f'l : {left_vel_dodge}, r : {right_vel_dodge}')
+                        go(1.2*right_vel_dodge-0.8*left_vel_dodge, 1.2*left_vel_dodge-0.8*right_vel_dodge)
 
-                # 앞으로가기
-                elif((target_x-now_x)>=0):
-                    if dist >5:
-                        if ((target_theta-now_theta)>5):
-                            if sig != 1:
-                                go(0,0)
-                                time.sleep(0.4)
-                                go(20,-20)
-                                sig = 1
-                            else:
-                                print("rrr")
-                        elif((target_theta-now_theta)<-5):
-                            if sig != 2:
-                                go(0,0)
-                                time.sleep(0.4)
-                                go(-20, 20)
-                                sig = 2
-                            else:
-                                print("lll")
+                    elif (theta_diff>5) and front_unclear == False:
+                        if sig != 1:
+                            go(0,0)
+                            time.sleep(0.4)
+                            go(20, -20)
+                            sig = 1
                         else:
-                            if sig != 3:
-                                go(20+1.2*fright_vel_dodge-0.8*fleft_vel_dodge, 20+1.2*fright_vel_dodge-0.8*fleft_vel_dodge)
-                                sig = 3
-                            else:
-                                print("ggg")
-                    else:
-                            if sig != 4:
-                                go(0, 0)
-                                sig = 4
-                            else:
-                                print("ststst")
+                            print("rrr")
+                    elif(theta_diff<-5) and front_unclear == False:
+                        if sig != 2:
+                            go(0,0)
+                            time.sleep(0.4)
+                            go(-20,20)
+                            sig = 2
+                        else:
+                            print("lll")
+                    elif theta_diff<5 and theta_diff>-5 and front_unclear == False:
+                        if sig != 3:
+                            go(-20, -20)
+                            sig = 3
+                        else:
+                            print("ggg")
+                else:
+                        if sig != 4:
+                            go(0, 0)
+                            sig = 4
+                        else:
+                            print("ststst")
 
             # elif(len(ta) == 3):
             #         arco_x, arco_y, arco_t = ta[0], ta[1], ta[2]
@@ -239,15 +203,9 @@ def target_odo_move():
 
 if __name__ == "__main__":
 
-    #
     while True:
-        thread1 = threading.Thread(target=read_from_arduino, daemon=True)
-        #thread2 = threading.Thread(target=target_odo_move, daemon=True)
+        thread1 = threading.Thread(target=read_from_arduino2, daemon=True)
         thread1.start()
-        #thread2.start()
-        #target_odo_move()
         thread1.join(timeout = 1)
-        #thread2.join()
-
 
 client_socket.close()

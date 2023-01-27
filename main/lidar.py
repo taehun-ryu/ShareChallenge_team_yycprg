@@ -192,7 +192,7 @@ if __name__ == '__main__':
                 left_0, left_1, left_2 = min(left_0_30), min(left_30_60), min(left_60_90)
                 right_0, right_1, right_2 = min(right_0_30), min(right_30_60), min(right_60_90)
 
-                left_index = (2 * right_0 + right_1 + 0.3 * right_2) / (2 + 1 + 0.3) 
+                left_index = (2 * right_0 + right_1 + 0.3 * right_2) / (2 + 1 + 0.3)
                 right_index = (2 * left_0 + left_1 + 0.3 * left_2) / (2 + 1 + 0.3)
 
 

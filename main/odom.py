@@ -37,7 +37,7 @@ py_serial2 = serial.Serial(
     # 보드 레이트 (통신 속도)
     baudrate=115200,
 )
-   
+
 
 HOST = '127.0.0.1'
 PORT = 8000
@@ -125,7 +125,7 @@ def target_odo_move():
             awef = False
         else:
             recieved_l = False
-            awef = True 
+            awef = True
 
         if 'RR' in commend:
             right_vel_dodge = int(commend.split('RR')[1].split('  ')[0])
