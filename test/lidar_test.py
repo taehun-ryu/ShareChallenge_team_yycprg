@@ -172,7 +172,7 @@ if __name__ == '__main__':
             for j, i in zip(front_ran, front_angle):
                 if i >= radians(90) or i <= radians(-90):
                     continue
-                if j > 1.5:
+                if j > 1.5 or j < 0.3:
                     j = 1.5
 
                 if i >= radians(-90) and i <= radians(-60):
@@ -192,7 +192,7 @@ if __name__ == '__main__':
                     print('err')
 
             for i, j in zip(back_x,back_y):
-                if back_x<-0.5 and (back_y > 0.5 or back_y < -0.5):
+                if back_x<-0.3 and (back_y > 0.5 or back_y < -0.5):
                     continue
 
                 back_obstacle.append(-back_x)
@@ -217,8 +217,8 @@ if __name__ == '__main__':
                 right_vel_sum = right_vel_sum + right_direction
 
                 if left_cnt >= 2:
-                    left_vel = f'LL{int((left_vel_sum/left_cnt) * 30)}  '
-                    right_vel = f'RR{int((right_vel_sum/left_cnt) * 30)}  '
+                    left_vel = f'LL{int((left_vel_sum/left_cnt) * 10)}  '
+                    right_vel = f'RR{int((right_vel_sum/left_cnt) * 10)}  '
                     back_value = f'BB{int(back_distance)}  '
 
                     client_socket.send(left_vel.encode())
