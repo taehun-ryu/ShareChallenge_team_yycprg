@@ -146,10 +146,15 @@ if __name__ == '__main__':
         front_scan = ydlidar.LaserScan()
         back_scan = ydlidar.LaserScan()
 
-        left_vel_sum = 0
-        right_vel_sum = 0
-        left_cnt = 0
-        right_cnt = 0
+        front_left_vel_sum = 0
+        front_right_vel_sum = 0
+        front_left_cnt = 0
+        front_right_cnt = 0
+
+        back_left_vel_sum = 0
+        back_right_vel_sum = 0
+        back_left_cnt = 0
+        back_right_cnt = 0
 
         while ret1 and ret2 and ydlidar.os_isOk():
             receiveLidarValue_front()
@@ -158,14 +163,21 @@ if __name__ == '__main__':
             front_x, front_y = changeToXY(front_ran,front_angle,front_size)
             back_x, back_y = changeToXY(back_ran,back_angle,back_size)
 
-            left_0_30 = []
-            left_30_60 = []
-            left_60_90 = []
+            front_left_0_30 = []
+            front_left_30_60 = []
+            front_left_60_90 = []
 
-            right_0_30 = []
-            right_30_60 = []
-            right_60_90 = []
+            front_right_0_30 = []
+            front_right_30_60 = []
+            front_right_60_90 = []
 
+            back_left_0_30 = []
+            back_left_30_60 = []
+            back_left_60_90 = []
+
+            back_right_0_30 = []
+            back_right_30_60 = []
+            back_right_60_90 = []
 
             for j, i in zip(front_ran, front_angle):
                 if i >= radians(90) or i <= radians(-90):
@@ -174,50 +186,96 @@ if __name__ == '__main__':
                     j = 1.5
 
                 if i >= radians(-90) and i <= radians(-60):
-                    left_60_90.append(j)
+                    front_left_60_90.append(j)
                 if i >= radians(-60) and i <= radians(-30):
-                    left_30_60.append(j)
+                    front_left_30_60.append(j)
                 if i >= radians(-30) and i <= radians(-0.0):
-                    left_0_30.append(j)
+                    front_left_0_30.append(j)
 
                 if i >= radians(+0.0) and i <= radians(30):
-                    right_0_30.append(j)
+                    front_right_0_30.append(j)
                 if i >= radians(30) and i <= radians(60):
-                    right_30_60.append(j)
+                    front_right_30_60.append(j)
                 if i >= radians(60) and i <= radians(90):
-                    right_60_90.append(j)
+                    front_right_60_90.append(j)
+
+                if j < 0:
+                    print('err')
+
+            for j, i in zip(back_ran, back_angle):
+                if i <= radians(90) or i >= radians(-90):
+                    continue
+                if j > 1.5:
+                    j = 1.5
+
+                if i <= radians(-90) and i >= radians(-120):
+                    back_left_60_90.append(j)
+                if i <= radians(-120) and i >= radians(-150):
+                    back_left_30_60.append(j)
+                if i <= radians(-150) and i >= radians(-180.0):
+                    back_left_0_30.append(j)
+
+                if i <= radians(+180.0) and i >= radians(150):
+                    back_right_0_30.append(j)
+                if i <= radians(150) and i >= radians(120):
+                    back_right_30_60.append(j)
+                if i <= radians(120) and i >= radians(90):
+                    back_right_60_90.append(j)
 
                 if j < 0:
                     print('err')
                     
             
-            if len(left_0_30) != 0 and len(left_30_60) != 0 and len(left_60_90) != 0 and len(right_0_30) != 0 and len(right_30_60) != 0 and len(right_60_90) != 0:
-                left_0, left_1, left_2 = min(left_0_30), min(left_30_60), min(left_60_90)
-                right_0, right_1, right_2 = min(right_0_30), min(right_30_60), min(right_60_90)
+            if len(front_left_0_30) != 0 and len(front_left_30_60) != 0 and len(front_left_60_90) != 0 and len(front_right_0_30) != 0 and len(front_right_30_60) != 0 and len(front_right_60_90) != 0\
+                and len(back_left_0_30) != 0 and len(back_left_30_60) != 0 and len(back_left_60_90) != 0 and len(back_right_0_30) != 0 and len(back_right_30_60) != 0 and len(back_right_60_90) != 0:
+                front_left_0, front_left_1, front_left_2 = min(front_left_0_30), min(front_left_30_60), min(front_left_60_90)
+                front_right_0, front_right_1, front_right_2 = min(front_right_0_30), min(front_right_30_60), min(front_right_60_90)
+
+                back_left_0, back_left_1, back_left_2 = min(back_left_0_30), min(back_left_30_60), min(back_left_60_90)
+                back_right_0, back_right_1, back_right_2 = min(back_right_0_30), min(back_right_30_60), min(back_right_60_90)
                 
-                left_index = (2 * right_0 + right_1 + 0.3 * right_2) / (2 + 1 + 0.3) 
-                right_index = (2 * left_0 + left_1 + 0.3 * left_2) / (2 + 1 + 0.3)
+                front_left_index = (2 * front_right_0 + front_right_1 + 0.3 * front_right_2) / (2 + 1 + 0.3) 
+                front_right_index = (2 * front_left_0 + front_left_1 + 0.3 * front_left_2) / (2 + 1 + 0.3)
+                
+                back_left_index = (2 * back_right_0 + back_right_1 + 0.3 * back_right_2) / (2 + 1 + 0.3) 
+                back_right_index = (2 * back_left_0 + back_left_1 + 0.3 * back_left_2) / (2 + 1 + 0.3)
+
+                front_left_direction = 1.5 - front_left_index
+                front_right_direction = 1.5 - front_right_index
+
+                back_left_direction = 1.5 - back_left_index
+                back_right_direction = 1.5 - back_right_index
+
                 
 
-                left_direction = 1.5 - left_index
-                right_direction = 1.5 - right_index
+                front_left_vel_sum = front_left_vel_sum + front_left_direction
+                front_left_cnt = front_left_cnt + 1
+                front_right_vel_sum = front_right_vel_sum + front_right_direction
 
-                
-                left_vel_sum = left_vel_sum + left_direction
-                left_cnt = left_cnt + 1
-                right_vel_sum = right_vel_sum + right_direction
+                back_left_vel_sum = back_left_vel_sum + back_left_direction
+                back_left_cnt = back_left_cnt + 1
+                back_right_vel_sum = back_right_vel_sum + back_right_direction
 
-                if left_cnt >= 2 and back_left_cnt >= 2: 
-                    left_vel = f'LL{int((left_vel_sum/left_cnt) * 30)} '
-                    right_vel = f'RR{int((right_vel_sum/left_cnt) * 30)} '
+                if front_left_cnt >= 2 and back_left_cnt >= 2: 
+                    front_left_vel = f'FL{int((front_left_vel_sum/front_left_cnt) * 30)} '
+                    front_right_vel = f'FR{int((front_right_vel_sum/front_left_cnt) * 30)} '
+                    back_left_vel = f'BL{int((back_left_vel_sum/back_left_cnt) * 30)} '
+                    back_right_vel = f'BR{int((back_right_vel_sum/back_left_cnt) * 30)} '
 
-                    client_socket.send(left_vel.encode())
-                    client_socket.send(right_vel.encode())
+                    client_socket.send(front_left_vel.encode())
+                    client_socket.send(front_right_vel.encode())
+                    client_socket.send(back_left_vel.encode())
+                    client_socket.send(back_right_vel.encode())
 
-                    left_vel_sum = 0
-                    right_vel_sum = 0
-                    left_cnt = 0
-                    right_cnt = 0
+                    front_left_vel_sum = 0
+                    front_right_vel_sum = 0
+                    front_left_cnt = 0
+                    front_right_cnt = 0
+
+                    back_left_vel_sum = 0
+                    back_right_vel_sum = 0
+                    back_left_cnt = 0
+                    back_right_cnt = 0
 
 
         ret1 = laser_front.turnOff()
