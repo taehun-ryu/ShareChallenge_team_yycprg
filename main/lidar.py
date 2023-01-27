@@ -207,8 +207,8 @@ if __name__ == '__main__':
                 right_vel_sum = right_vel_sum + right_direction
 
                 if left_cnt >= 2: 
-                    left_vel = f'LL{int((left_vel_sum/left_cnt) * 30)} '
-                    right_vel = f'RR{int((right_vel_sum/left_cnt) * 30)} '
+                    left_vel = f'LL{int((left_vel_sum/left_cnt) * 30)}  '
+                    right_vel = f'RR{int((right_vel_sum/left_cnt) * 30)}  '
 
                     client_socket.send(left_vel.encode())
                     client_socket.send(right_vel.encode())
