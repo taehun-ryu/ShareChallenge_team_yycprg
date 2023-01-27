@@ -135,7 +135,6 @@ def changeToXY(ran,angle,size):
 
 
 if __name__ == '__main__':
-    
     ret1 = laser_front.initialize()
     ret2 = laser_back.initialize()
 
@@ -152,7 +151,7 @@ if __name__ == '__main__':
         right_cnt = 0
 
         while ret1 and ret2 and ydlidar.os_isOk():
-            
+
             receiveLidarValue_front()
             receiveLidarValue_back()
 
@@ -185,28 +184,27 @@ if __name__ == '__main__':
                 if i >= radians(30) and i <= radians(60):
                     right_30_60.append(j)
                 if i >= radians(60) and i <= radians(90):
-                    right_60_90.append(j)                          
+                    right_60_90.append(j)
                 if j < 0:
                     print('err')
-                    
-            
+
             if len(left_0_30) != 0 and len(left_30_60) != 0 and len(left_60_90) != 0 and len(right_0_30) != 0 and len(right_30_60) != 0 and len(right_60_90) != 0:
                 left_0, left_1, left_2 = min(left_0_30), min(left_30_60), min(left_60_90)
                 right_0, right_1, right_2 = min(right_0_30), min(right_30_60), min(right_60_90)
-                
+
                 left_index = (2 * right_0 + right_1 + 0.3 * right_2) / (2 + 1 + 0.3) 
                 right_index = (2 * left_0 + left_1 + 0.3 * left_2) / (2 + 1 + 0.3)
-                
+
 
                 left_direction = 1.5 - left_index
                 right_direction = 1.5 - right_index
 
-                
+
                 left_vel_sum = left_vel_sum + left_direction
                 left_cnt = left_cnt + 1
                 right_vel_sum = right_vel_sum + right_direction
 
-                if left_cnt >= 2: 
+                if left_cnt >= 2:
                     left_vel = f'LL{int((left_vel_sum/left_cnt) * 30)}  '
                     right_vel = f'RR{int((right_vel_sum/left_cnt) * 30)}  '
 

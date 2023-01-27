@@ -100,7 +100,7 @@ def target_odo_move():
     global sig
     global data
 
-    global left_vel  
+    global left_vel
     global right_vel
 
     global left_vel_dodge
@@ -113,7 +113,7 @@ def target_odo_move():
     # if py_serial.readable():
     #     response = py_serial.readline()
     # print(response)
-    
+
     if data != None:
         commend = data.decode()
         text= response.decode()
@@ -131,23 +131,22 @@ def target_odo_move():
             right_vel_dodge = int(commend.split('RR')[1].split('  ')[0])
             recieved_r = True
             awef = False
-            
+
         else:
             recieved_r = False
             awef = True
-        
+
         if recieved_l and recieved_r and (right_vel_dodge > 0 or left_vel_dodge > 0):
             print(f'l : {left_vel_dodge}, r : {right_vel_dodge}')
             go(1.2*right_vel_dodge-0.8*left_vel_dodge, 1.2*left_vel_dodge-0.8*right_vel_dodge)
             ta=[]
-       
+
         if len(m) == 5:
             now_x, now_y=m[2],m[3]
             now_theta=m[4]
 
             ta=[float(tas) for tas in re.findall(r'-?\d+\.?\d*', commend)]#문자열에서 숫자추출
-            
-            
+
             if (len(ta) == 2) and awef:
                 target_x,target_y = ta[0],ta[1]
                 target_theta=math.atan((target_y-now_y)/(target_x-now_x))*180/PI#각도구하기 '도'
@@ -161,8 +160,7 @@ def target_odo_move():
                     for i in range(int((now_theta)/(-reset_degree))):
                         now_theta = now_theta+reset_degree*(i+1)
 
-                
-                
+
                 if ((target_x-now_x)<0):
                     if dist >5:
                         if ((target_theta-now_theta)>5):
@@ -228,9 +226,9 @@ def target_odo_move():
             #         arco_x, arco_y, arco_t = ta[0], ta[1], ta[2]
             #         now_munja=f'x {arco_x} y {arco_y} t {arco_t}'
             #         py_serial.write(now_munja.encode())
-            
+
 if __name__ == "__main__":
-    
+
     #
     while True:
         thread1 = threading.Thread(target=read_from_arduino2, daemon=True)
@@ -240,7 +238,5 @@ if __name__ == "__main__":
         #target_odo_move()
         thread1.join(timeout = 1)
         #thread2.join()
-        
-    
 
 client_socket.close()

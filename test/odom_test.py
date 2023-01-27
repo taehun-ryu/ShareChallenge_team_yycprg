@@ -29,6 +29,12 @@ bright_vel_dodge = 0
 PI=math.pi
 py_serial = serial.Serial(
     # Window
+    port='/dev/ttyACM1',
+    # 보드 레이트 (통신 속도)
+    baudrate=115200,
+)
+py_serial2 = serial.Serial(
+    # Window
     port='/dev/ttyACM0',
     # 보드 레이트 (통신 속도)
     baudrate=115200,
@@ -60,16 +66,15 @@ start_new_thread(recv_data, (client_socket,))
 print ('>> Connect Server')
 
 def read_from_arduino():
+    global left_vel
+    global right_vel
+    global response
     while True:
-        global left_vel
-        global right_vel
-        global response
-        if py_serial.readable():
-            response = py_serial.readline()
-        #b's:  0.00     S:  0.00     nowx:  0.00     nowy:  0.00     now_theta:  0.00\r\n'
-        print(response)
-        target_odo_move()
-        send(left_vel, right_vel)
+        if py_serial2.readable():
+            response = py_serial2.readline()
+            print(response)
+        else:
+            pass
 
 def go(s, S):
     global left_vel
@@ -140,6 +145,8 @@ def target_odo_move():
 
         if recieved_fl and recieved_fr and recieved_bl and recieved_br:
             noerr = True
+        else:
+            noerr = False
 
 
         if len(m) == 5:
@@ -182,7 +189,7 @@ def target_odo_move():
                                 print("lll")
                         else:
                             if sig != 3:
-                                go(-20-bleft_vel_dodge, -20-bright_vel_dodge)
+                                go(-20-(1.2*bright_vel_dodge-0.8*bleft_vel_dodge), -20-(1.2*bright_vel_dodge-0.8*bleft_vel_dodge))
                                 sig = 3
                             else:
                                 print("ggg")
@@ -214,7 +221,7 @@ def target_odo_move():
                                 print("lll")
                         else:
                             if sig != 3:
-                                go(20+fleft_vel_dodge, 20+fright_vel_dodge)
+                                go(20+1.2*fright_vel_dodge-0.8*fleft_vel_dodge, 20+1.2*fright_vel_dodge-0.8*fleft_vel_dodge)
                                 sig = 3
                             else:
                                 print("ggg")
