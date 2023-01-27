@@ -169,7 +169,10 @@ def target_odo_move():
                         if sig != 1:
                             go(0,0)
                             time.sleep(0.4)
-                            go(20, -20)
+                            if front_unclear:
+                                go(-left_vel_dodge,-right_vel_dodge)
+                            else:
+                                go(20, -20)
                             sig = 1
                         else:
                             print("rrr")
@@ -177,7 +180,10 @@ def target_odo_move():
                         if sig != 2:
                             go(0,0)
                             time.sleep(0.4)
-                            go(-20,20)
+                            if front_unclear:
+                                go(-left_vel_dodge,-right_vel_dodge)
+                            else:
+                                go(-20,20)
                             sig = 2
                         else:
                             print("lll")
