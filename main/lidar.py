@@ -152,13 +152,9 @@ if __name__ == '__main__':
         right_cnt = 0
 
         while ret1 and ret2 and ydlidar.os_isOk():
-<<<<<<< HEAD
+            
             receiveLidarValue_front()
             receiveLidarValue_back()
-=======
-            receiveLidarValue_front(limit=1.5)
-            receiveLidarValue_back(limit=1.5)
->>>>>>> a97ec3da6a3ec59f0b6699343738c940fc1632d1
 
             front_x, front_y = changeToXY(front_ran,front_angle,front_size)
             back_x, back_y = changeToXY(back_ran,back_angle,back_size)
@@ -171,10 +167,6 @@ if __name__ == '__main__':
             right_30_60 = []
             right_60_90 = []
 
-<<<<<<< HEAD
-
-=======
->>>>>>> a97ec3da6a3ec59f0b6699343738c940fc1632d1
             for j, i in zip(front_ran, front_angle):
                 if i >= radians(90) or i <= radians(-90):
                     continue
@@ -214,7 +206,7 @@ if __name__ == '__main__':
                 left_cnt = left_cnt + 1
                 right_vel_sum = right_vel_sum + right_direction
 
-                if left_cnt >= 2 and back_left_cnt >= 2: 
+                if left_cnt >= 2: 
                     left_vel = f'LL{int((left_vel_sum/left_cnt) * 30)} '
                     right_vel = f'RR{int((right_vel_sum/left_cnt) * 30)} '
 
