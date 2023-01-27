@@ -192,10 +192,8 @@ if __name__ == '__main__':
                     print('err')
 
             for i, j in zip(back_x,back_y):
-                if back_x<-0.3 and (back_y > 0.5 or back_y < -0.5):
-                    continue
-
-                back_obstacle.append(-back_x)
+                if (i>-0.3 and i<0) and (j > 0.5 and j < -0.5):
+                    back_obstacle.append(-i)
 
             if len(back_obstacle) != 0:
                 back_distance = min(back_obstacle)
@@ -219,11 +217,13 @@ if __name__ == '__main__':
                 if left_cnt >= 2:
                     left_vel = f'LL{int((left_vel_sum/left_cnt) * 10)}  '
                     right_vel = f'RR{int((right_vel_sum/left_cnt) * 10)}  '
-                    back_value = f'BB{int(back_distance)}  '
+                    back_value = f'BB{int(back_distance*100)}  '
 
                     client_socket.send(left_vel.encode())
                     client_socket.send(right_vel.encode())
                     client_socket.send(back_value.encode())
+
+                    print(f'{left_vel},{right_vel},{back_value}')
 
                     left_vel_sum = 0
                     right_vel_sum = 0
