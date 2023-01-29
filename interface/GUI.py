@@ -63,7 +63,7 @@ def btn_4(): #식료품 안내
     btn_snack=tkinter.Button    (newWindow4,text="   과자/간식   ",overrelief="solid",relief="solid",borderwidth=3,background="green",foreground="white",width=20,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_sna)
     btn_bread=tkinter.Button    (newWindow4,text="  베이커리/잼  ",overrelief="solid",relief="solid",borderwidth=3,background="purple",foreground="white",width=20,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_bre)
     btn_health=tkinter.Button   (newWindow4,text="    건강식품    ",overrelief="solid",relief="solid",borderwidth=3,background="teal",foreground="white",width=20,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_hea)
-    btn_ecofood=tkinter.Button  (newWindow4,text=" 친환경/유기농 ",overrelief="solid",relief="solid",borderwidth=3,background="navy",foreground="white",width=20,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_eco)
+    btn_back=tkinter.Button     (newWindow4,text=" 뒤로가기 ",overrelief="solid",relief="solid",borderwidth=3,background="navy",foreground="white",width=20,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_2)
 
     btn_fruit.grid(row=1, column=1)
     btn_vegitable.grid(row=1, column=2)
@@ -80,7 +80,7 @@ def btn_4(): #식료품 안내
     btn_snack.grid(row=4, column=1)
     btn_bread.grid(row=4, column=2)
     btn_health.grid(row=4, column=3)
-    btn_ecofood.grid(row=4, column=4)
+    btn_back.grid(row=4, column=4)
 
 def btn_5(): #주류 물품 안내
     newWindow5 = tkinter.Toplevel(window)
@@ -90,7 +90,7 @@ def btn_5(): #주류 물품 안내
     btn_tissue=tkinter.Button   (newWindow5,text=" 제지/위생용품 ",overrelief="solid",relief="solid",borderwidth=3,background="black",foreground="white",width=26,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_tis)
     btn_clean=tkinter.Button    (newWindow5,text=" 청소/생활용품 ",overrelief="solid",relief="solid",borderwidth=3,background="white",foreground="black",width=26,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_cle)
     btn_house=tkinter.Button    (newWindow5,text=" 가구/인테리어 ",overrelief="solid",relief="solid",borderwidth=3,background="red",foreground="white",width=26,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_hou)
-    btn_kitchen=tkinter.Button  (newWindow5,text=" 주방용품 ",overrelief="solid",relief="solid",borderwidth=3,background="lime",foreground="black",width=26,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_kit)
+    btn_kitchen=tkinter.Button  (newWindow5,text=" 주방용품/디지털 ",overrelief="solid",relief="solid",borderwidth=3,background="lime",foreground="black",width=26,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_kit)
     btn_life=tkinter.Button     (newWindow5,text=" 생활잡화/공구 ",overrelief="solid",relief="solid",borderwidth=3,background="blue",foreground="white",width=26,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_lif)
     btn_peet=tkinter.Button     (newWindow5,text=" 반려동물 ",overrelief="solid",relief="solid",borderwidth=3,background="yellow",foreground="black",width=26,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_pet)
     btn_beauty=tkinter.Button   (newWindow5,text=" 뷰티용품 ",overrelief="solid",relief="solid",borderwidth=3,background="cyan",foreground="black",width=26,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_bea)
@@ -98,7 +98,7 @@ def btn_5(): #주류 물품 안내
     btn_pashion=tkinter.Button  (newWindow5,text=" 패션/언더웨어 ",overrelief="solid",relief="solid",borderwidth=3,background="silver",foreground="white",width=26,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_pas)
     btn_goods=tkinter.Button    (newWindow5,text=" 잡화/명품 ",overrelief="solid",relief="solid",borderwidth=3,background="gray",foreground="white",width=26,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_god)
     btn_sports=tkinter.Button   (newWindow5,text=" 스포츠/여행/자동차 ",overrelief="solid",relief="solid",borderwidth=3,background="maroon",foreground="white",width=26,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_spo)
-    btn_digital=tkinter.Button  (newWindow5,text=" 디지털/가전/렌탈 ",overrelief="solid",relief="solid",borderwidth=3,background="olive",foreground="white",width=26,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_dig)
+    btn_back2=tkinter.Button  (newWindow5,text=" 뒤로가기 ",overrelief="solid",relief="solid",borderwidth=3,background="olive",foreground="white",width=26,height=4,font=font_btn4,activebackground="MediumPurple1",highlightthickness=3,command=btn_2)
   
     btn_tissue.grid(row=1, column=1)
     btn_clean.grid(row=1, column=2)
@@ -111,7 +111,7 @@ def btn_5(): #주류 물품 안내
     btn_pashion.grid(row=3, column=3)
     btn_goods.grid(row=4, column=1)
     btn_sports.grid(row=4, column=2)
-    btn_digital.grid(row=4, column=3)
+    btn_back2.grid(row=4, column=3)
 
 def btn_fru():
     messagebox.showinfo("과일 위치","지상 1층 A-1구역에 있습니다.")
