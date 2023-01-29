@@ -9,11 +9,11 @@ import numpy as np
 import math
 
 
-port1 = "/dev/ttyUSB0"
+port1 = "/dev/ttyUSB2"
 port2 = "/dev/ttyUSB1"
 
 fig = plt.figure()
-lidar_polar = plt.subplot(polar=True)
+lidar_polar = plt.subplot(polar=False)
 #lidar_polar.autoscale_view(True,True,True)
 lidar_polar.grid(True)
 
@@ -38,32 +38,33 @@ laser_back.setlidaropt(ydlidar.LidarPropSingleChannel, False)
 def animate(num):
     global front_ran,front_angle,front_size,back_ran,back_angle,back_size
     receiveLidarValue_front(type=True,limit=1.5)
-    receiveLidarValue_back(limit=1.5)
+    receiveLidarValue_back(type=True,limit=1.5)
 
     front_x, front_y = changeToXY(front_ran,front_angle,front_size)
-    # back_x, back_y = changeToXY(back_ran,back_angle,back_size)
+    back_x, back_y = changeToXY(back_ran,back_angle,back_size)
 
-    # front_x,front_y,back_x,back_y = removePillar(front_x,front_y,back_x,back_y)
-    # front_x = front_x + 0.4
-    # back_x = back_x - 0.2
+    front_x,front_y,back_x,back_y = removePillar(front_x,front_y,back_x,back_y)
+    front_x = front_x + 0.4
+    back_x = back_x - 0.2
 
     # plot
     lidar_polar.clear()
+
     # plot r, theta
-    plt.scatter(front_ran,front_angle,color='red')
-    #plt.scatter(back_ran,back_angle,color='blue')
+    # plt.scatter(front_angle,front_ran,color='red')
+    # plt.scatter(back_angle,back_ran,color='blue')
 
     # plot x, y
-    # plt.axis([-3,3,-3,3])
-    # plt.xlabel('Left-Right')
-    # plt.ylabel('Back-Front')
-    # plt.scatter(0,0,color='green')
-    # plt.scatter(np.arange(-0.25,0.25,0.01),np.full(50,-0.15),color="pink",s=10)
-    # plt.scatter(np.arange(-0.25,0.25,0.01),np.full(50,0.35),color="pink",s=10)
-    # plt.scatter(np.full(50,0.25),np.arange(-0.15,0.35,0.01),color="pink",s=10)
-    # plt.scatter(np.full(50,-0.25),np.arange(-0.15,0.35,0.01),color="pink",s=10)
-    # plt.scatter(-front_y,front_x,color='red')
-    # plt.scatter(-back_y,back_x,color='blue')
+    plt.axis([-3,3,-3,3])
+    plt.xlabel('Left-Right')
+    plt.ylabel('Back-Front')
+    plt.scatter(0,0,color='green')
+    plt.scatter(np.arange(-0.25,0.25,0.01),np.full(50,-0.15),color="pink",s=10)
+    plt.scatter(np.arange(-0.25,0.25,0.01),np.full(50,0.35),color="pink",s=10)
+    plt.scatter(np.full(50,0.25),np.arange(-0.15,0.35,0.01),color="pink",s=10)
+    plt.scatter(np.full(50,-0.25),np.arange(-0.15,0.35,0.01),color="pink",s=10)
+    plt.scatter(-front_y,front_x,color='red')
+    plt.scatter(-back_y,back_x,color='blue')
 
 def removePillar(fran_x,fran_y,bran_x,bran_y):
     findex = np.array([])
@@ -92,8 +93,8 @@ def receiveLidarValue_front(type:bool=False,limit:float=None):
     r = laser_front.doProcessSimple(front_scan)
 
     if type:
-        left_rad = math.radians(75)
-        right_rad = math.radians(-75)
+        left_rad = 1.73
+        right_rad = -1.74
     else:
         left_rad = math.pi
         right_rad = -math.pi

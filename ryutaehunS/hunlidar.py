@@ -14,8 +14,8 @@ data_sig = None
 client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 client_socket.connect((HOST, PORT))
 
-port1 = "/dev/ttyUSB1"
-port2 = "/dev/ttyUSB0"
+port1 = "/dev/ttyUSB2"  # front_liudar port
+port2 = "/dev/ttyUSB1"  # back_liudar port
 
 laser_front = ydlidar.CYdLidar()
 laser_front.setlidaropt(ydlidar.LidarPropSerialPort, port1)
@@ -50,7 +50,7 @@ print ('>> Connect Server')
 # 전방 라이다 sensing
 # type: True -> 스캔 각도 제한
 # limit -> 스캔 거리 제한.
-def receiveLidarValue_front(type:bool=True,limit:float=None):
+def receiveLidarValue_front(type:bool=False,limit:float=None):
     global front_size , front_angle, front_ran
     r = laser_front.doProcessSimple(front_scan)
 
@@ -96,7 +96,7 @@ def receiveLidarValue_front(type:bool=True,limit:float=None):
         front_size = len(front_angle)
 
 # 후방 라이다 sensing
-def receiveLidarValue_back(type:bool=True,limit:float=None):
+def receiveLidarValue_back(type:bool=False,limit:float=None):
     global back_size, back_angle, back_ran
     r = laser_back.doProcessSimple(back_scan)
     if type:
@@ -152,40 +152,44 @@ if __name__ == '__main__':
         front_obstacle = 0
 
         while ret1 and ret2 and ydlidar.os_isOk():
-            receiveLidarValue_front()
+            receiveLidarValue_front(type=True)
             receiveLidarValue_back()
+
             front_x, front_y = changeToXY(front_ran,front_angle,front_size)
             back_x, back_y = changeToXY(back_ran,back_angle,back_size)
 
-            left_0_30 = []
-            left_30_60 = []
-            left_60_90 = []
+            front_ran_1 = np.where((front_ran>1),1,front_ran)
 
-            right_0_30 = []
-            right_30_60 = []
-            right_60_90 = []
+            left_0_1 = []
+            left_1_2 = []
+            left_2_3 = []
+
+            right_0_1 = []
+            right_1_2 = []
+            right_2_3 = []
 
             back = []
+            front = []
 
-            front_ran = np.where((front_ran>1),1,front_ran)
+            point_angle = [60, 40, 20, -20, -40, -60]
 
-            for j, i in zip(front_ran, front_angle):
-                if i >= math.radians(90) or i <= math.radians(-90):
+            for j, i in zip(front_ran_1, front_angle):
+                if i >= math.radians(point_angle[0]) or i <= math.radians(point_angle[5]):
                     continue
 
-                if i >= math.radians(-90) and i <= math.radians(-60):
-                    left_60_90.append(j)
-                if i >= math.radians(-60) and i <= math.radians(-30):
-                    left_30_60.append(j)
-                if i >= math.radians(-30) and i <= math.radians(-0.0):
-                    left_0_30.append(j)
+                if i >= math.radians(point_angle[5]) and i <= math.radians(point_angle[4]):
+                    right_2_3.append(j)
+                if i >= math.radians(point_angle[4]) and i <= math.radians(point_angle[3]):
+                    right_1_2.append(j)
+                if i >= math.radians(point_angle[3]) and i <= math.radians(-0.0):
+                    right_0_1.append(j)
 
-                if i >= math.radians(+0.0) and i <= math.radians(30):
-                    right_0_30.append(j)
-                if i >= math.radians(30) and i <= math.radians(60):
-                    right_30_60.append(j)
-                if i >= math.radians(60) and i <= math.radians(90):
-                    right_60_90.append(j)
+                if i >= math.radians(+0.0) and i <= math.radians(point_angle[2]):
+                    left_0_1.append(j)
+                if i >= math.radians(point_angle[2]) and i <= math.radians(point_angle[1]):
+                    left_1_2.append(j)
+                if i >= math.radians(point_angle[1]) and i <= math.radians(point_angle[0]):
+                    left_2_3.append(j)
                 if j < 0:
                     print('err')
 
@@ -195,20 +199,28 @@ if __name__ == '__main__':
                 else:
                     back_obstacle:int = 0
 
-            if len(left_0_30) != 0 and len(left_30_60) != 0 and len(left_60_90) != 0 and len(right_0_30) != 0 and len(right_30_60) != 0 and len(right_60_90) != 0:
+            for i,j in zip(front_x,front_y):
+                if i<=1 and j <=0.5 and j>=-0.5:
+                    front.append(abs(i))
+                else:
+                    front.append(1)
 
-                left_0, left_1, left_2 = min(left_0_30), min(left_30_60), min(left_60_90)
-                right_0, right_1, right_2 = min(right_0_30), min(right_30_60), min(right_60_90)
+            front_dis= min(front)
+            
 
-                left_index = (2 * right_0 + right_1 + 0.3 * right_2) / (2 + 1 + 0.3)
-                right_index = (2 * left_0 + left_1 + 0.3 * left_2) / (2 + 1 + 0.3)
+            if len(left_0_1) != 0 and len(left_1_2) != 0 and len(left_2_3) != 0 and len(right_0_1) != 0 and len(right_1_2) != 0 and len(right_2_3) != 0:
+
+                left_0, left_1, left_2 = min(left_0_1), min(left_1_2), min(left_2_3)
+                right_0, right_1, right_2 = min(right_0_1), min(right_1_2), min(right_2_3)
+
+                left_index = (2 * left_0 + left_1 + 0.3 * left_2) / (2 + 1 + 0.3)
+                right_index = (2 * right_0 + right_1 + 0.3 * right_2) / (2 + 1 + 0.3)
 
 
-                left_direction = 1.5 - left_index
-                right_direction = 1.5 - right_index
+                left_direction = 1 - left_index
+                right_direction = 1 - right_index
 
-                velocity = f'{int((left_direction) * 30)}  {int((right_direction) * 30)}  {int(min(front_ran)*100)} {back_obstacle}\r\n'
-                print(velocity)
+                velocity = f'{int((left_direction) * 30)}  {int((right_direction) * 30)}  {int(front_dis*100)} {back_obstacle}\r\n'
 
                 left_vel_sum = 0
                 right_vel_sum = 0
@@ -216,13 +228,15 @@ if __name__ == '__main__':
                 right_cnt = 0
 
             if data != None:
-                if min(front_ran)*100 == 100:
+                if int(front_dis*100) == 100:
+                    print("Go to target")
                     if data_sig != 1:
                         client_socket.send(data)
                         data_sig = 1
                     else:
                         pass
                 else:
+                    print("회피코드 동작",velocity)
                     client_socket.send(velocity.encode())
                     data_sig = 3
                     
