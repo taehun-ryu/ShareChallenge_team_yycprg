@@ -8,11 +8,10 @@ window=tkinter.Tk()
 
 window.title("YYCPRG GUI") #GUI 제목
 window.geometry("1920x1080") #창크기 제목
-window.resizable(False,False)
 font=tkinter.font.Font(family="맑은 고딕", size=20, slant="roman", weight="bold") #폰트 설정
 font_btn=tkinter.font.Font(family="맑은 고딕",size=100,slant="roman",weight="bold") #버튼 글씨색
 font_btn2=tkinter.font.Font(family="맑은 고딕",size=45,slant="roman",weight="bold") #버튼 글씨색
-font_btn4=tkinter.font.Font(family="맑은 고딕",size=28,slant="roman",weight="bold") #버튼 글씨색
+font_btn4=tkinter.font.Font(family="맑은 고딕",size=29,slant="roman",weight="bold") #버튼 글씨색
 
     #background="바탕 색"
     #foreground="문자열 색"
@@ -28,9 +27,9 @@ def btn_2(): #물품 안내
     newWindow2.geometry("1920x1080")
     label=tkinter.Label(newWindow2, text="환영합니다. 무엇을 도와드릴까요?", width=1500, height=2, fg="black", relief="solid",background="pink",
         borderwidth="3",foreground="white",font=font)
-    btn4=tkinter.Button(newWindow2,text="                           FOOD                           ",overrelief="solid",relief="solid",borderwidth=3
+    btn4=tkinter.Button(newWindow2,text="                            FOOD                            ",overrelief="solid",relief="solid",borderwidth=3
         ,background="chocolate1",foreground="white",font=font_btn2,activebackground="Hotpink1",highlightthickness=3,command=btn_4)
-    btn5=tkinter.Button(newWindow2,text="                           LIFE                           ",overrelief="solid",relief="solid",borderwidth=3
+    btn5=tkinter.Button(newWindow2,text="                            LIFE                            ",overrelief="solid",relief="solid",borderwidth=3
         ,background="DarkSeaGreen1",foreground="white",font=font_btn2,activebackground="SeaGreen2",highlightthickness=3,command=btn_5)
     
     label.pack()

@@ -14,8 +14,8 @@ data_sig = None
 client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 client_socket.connect((HOST, PORT))
 
-port1 = "/dev/ttyUSB2"  # front_liudar port
-port2 = "/dev/ttyUSB1"  # back_liudar port
+port1 = "/dev/ttyUSB1"  # front_liudar port
+port2 = "/dev/ttyUSB0"  # back_liudar port
 
 laser_front = ydlidar.CYdLidar()
 laser_front.setlidaropt(ydlidar.LidarPropSerialPort, port1)
@@ -220,7 +220,14 @@ if __name__ == '__main__':
                 left_direction = 1 - left_index
                 right_direction = 1 - right_index
 
-                velocity = f'{int((left_direction) * 60)}  {int((right_direction) * 60)}  {int(front_dis*100)} {back_obstacle}\r\n'
+                left_vel = left_direction * 60
+                right_vel = right_direction * 60
+
+                if left_vel<10 and right_vel<10:
+                    left_vel +=10
+                    right_vel +=10
+
+                velocity = f'{int(left_vel)}  {int(right_vel)}  {int(front_dis*100)} {back_obstacle}\r\n'
                 print(velocity)
                 left_vel_sum = 0
                 right_vel_sum = 0

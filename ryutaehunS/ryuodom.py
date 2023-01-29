@@ -75,6 +75,7 @@ def target_odo_move():
             if len(ta) ==4:
                 left_vel, right_vel,front_disCm, back = ta[0],ta[1],ta[2],ta[3]
                 print(f'{left_vel},{right_vel},{front_disCm},{back}')
+
                 if front_disCm <=40:
                     if sig != 1:
                         go(0,0)
@@ -125,16 +126,16 @@ def target_odo_move():
                 if dist >5:
                     if ((target_theta-now_theta)>5):
                         if sig != 1:
-                            go(0,0)
-                            time.sleep(0.4)
+                            # go(0,0)
+                            # time.sleep(0.4)
                             go(20, -20)
                             sig = 1
                         else:
                             print("rrr")
                     elif((target_theta-now_theta)<-5):
                         if sig != 2:
-                            go(0,0)
-                            time.sleep(0.4)
+                            # go(0,0)
+                            # time.sleep(0.4)
                             go(-20, 20)
                             sig = 2
                         else:

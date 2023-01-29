@@ -9,7 +9,7 @@ import numpy as np
 import math
 
 
-port1 = "/dev/ttyUSB2"
+port1 = "/dev/ttyUSB0"
 port2 = "/dev/ttyUSB1"
 
 fig = plt.figure()
