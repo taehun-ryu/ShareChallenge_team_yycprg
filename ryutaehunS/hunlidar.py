@@ -220,7 +220,7 @@ if __name__ == '__main__':
                 left_direction = 1 - left_index
                 right_direction = 1 - right_index
 
-                velocity = f'{int((left_direction) * 30)}  {int((right_direction) * 30)}  {int(front_dis*100)} {back_obstacle}\r\n'
+                velocity = f'{int((left_direction) * 60)}  {int((right_direction) * 60)}  {int(front_dis*100)} {back_obstacle}\r\n'
                 print(velocity)
                 left_vel_sum = 0
                 right_vel_sum = 0
