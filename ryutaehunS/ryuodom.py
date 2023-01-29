@@ -17,8 +17,8 @@ sig = 0
 
 PI=math.pi
 py_serial = serial.Serial(
-    # Window
-    port='/dev/ttyUSB2',
+    # arduino port
+    port='/dev/ttyACM1',
     # 보드 레이트 (통신 속도)
     baudrate=115200,
 )
@@ -75,7 +75,7 @@ def target_odo_move():
             if len(ta) ==4:
                 left_vel, right_vel,front_disCm, back = ta[0],ta[1],ta[2],ta[3]
                 print(f'{left_vel},{right_vel},{front_disCm},{back}')
-                if front_disCm <=30:
+                if front_disCm <=40:
                     if sig != 1:
                         go(0,0)
                         sig = 1
@@ -84,11 +84,15 @@ def target_odo_move():
                 else:
                     if sig != 2:
                         if left_vel - right_vel > 0 and left_vel - right_vel < 10:
-                            go(right_vel - 5,left_vel + 5)
+                            go(right_vel - 7,left_vel + 7)
                         elif right_vel - left_vel > 0 and right_vel - left_vel < 10:
-                            go(left_vel-5,5+right_vel)
-                        else:
-                            go(left_vel,right_vel)
+                            go(right_vel + 7,left_vel - 7)
+                        elif left_vel - right_vel > 0 and left_vel - right_vel > 10:
+                            go(right_vel,left_vel)
+                        elif right_vel - left_vel > 0 and right_vel - left_vel > 10:
+                            go(right_vel,left_vel)
+                        elif left_vel == right_vel:
+                            go(left_vel,-right_vel)
                         sig = 2
                     else:
                         print("장애물 회피")
@@ -123,7 +127,7 @@ def target_odo_move():
                         if sig != 1:
                             go(0,0)
                             time.sleep(0.4)
-                            go(20, -20)
+                            go(10, -10)
                             sig = 1
                         else:
                             print("rrr")
@@ -131,7 +135,7 @@ def target_odo_move():
                         if sig != 2:
                             go(0,0)
                             time.sleep(0.4)
-                            go(-20, 20)
+                            go(-10, 10)
                             sig = 2
                         else:
                             print("lll")

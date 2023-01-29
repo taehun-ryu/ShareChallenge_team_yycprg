@@ -200,7 +200,7 @@ if __name__ == '__main__':
                     back_obstacle:int = 0
 
             for i,j in zip(front_x,front_y):
-                if i<=1 and j <=0.5 and j>=-0.5:
+                if i<=1 and j <=0.3 and j>=-0.3:
                     front.append(abs(i))
                 else:
                     front.append(1)
@@ -221,7 +221,7 @@ if __name__ == '__main__':
                 right_direction = 1 - right_index
 
                 velocity = f'{int((left_direction) * 30)}  {int((right_direction) * 30)}  {int(front_dis*100)} {back_obstacle}\r\n'
-
+                print(velocity)
                 left_vel_sum = 0
                 right_vel_sum = 0
                 left_cnt = 0
