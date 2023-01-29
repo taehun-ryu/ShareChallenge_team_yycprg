@@ -20,6 +20,63 @@ font_btn4=tkinter.font.Font(family="맑은 고딕",size=29,slant="roman",weight=
     #테두리 색
     #relief=테두리 형태 [flat=암것도 없음/groove=가느다란 사각 테두리/raised=볼록블럭/ridge=오목블록/solid=진한테두리/sunken=더깊은오목블럭
 
+def btn_fru():
+    messagebox.showinfo("과일 위치","지상 1층 A-1구역에 있습니다.")
+def btn_veg():
+    messagebox.showinfo("채소 위치","지상 1층 A-2구역에 있습니다.")
+def btn_ric():
+    messagebox.showinfo("쌀/잡곡/견과 위치","지상 1층 A-3구역에 있습니다.")
+def btn_mea():
+    messagebox.showinfo("정육/계란류 위치","지상 1층 A-4구역에 있습니다.")
+def btn_fis():
+    messagebox.showinfo("수산물/건어물/해산물 위치","지상 1층 A-5구역에 있습니다.")
+def btn_mil():
+    messagebox.showinfo("우유/유제품 위치","지상 1층 A-6구역에 있습니다.")
+def btn_mee():
+    messagebox.showinfo("밀키트/간편식류 위치","지상 1층 A-7구역에 있습니다.")
+def btn_kim():
+    messagebox.showinfo("김치/반찬/델리 위치","지상 1층 A-8구역에 있습니다.")
+def btn_wat():
+    messagebox.showinfo("생수/음료/주류","지상 1층 B-1구역에 있습니다.")
+def btn_cof():
+    messagebox.showinfo("커피/원두/차 위치","지상 1층 B-2구역에 있습니다.")
+def btn_nod():
+    messagebox.showinfo("면류/통조림 위치","지상 1층 B-3구역에 있습니다.")
+def btn_sau():
+    messagebox.showinfo("양념/오일 위치","지상 1층 B-4구역에 있습니다.")
+def btn_sna():
+    messagebox.showinfo("과자/간식 위치","지상 1층 B-5구역에 있습니다.")
+def btn_bre():
+    messagebox.showinfo("베이커리/잼 위치","지상 1층 B-6구역에 있습니다.")
+def btn_hea():
+    messagebox.showinfo("건강식품 위치","지상 1층 B-7구역에 있습니다.")
+def btn_eco():
+    messagebox.showinfo("친환경/유기농 위치","지상 1층 A-1 구역, A-2 구역에 있습니다.")
+
+def btn_tis():
+    messagebox.showinfo("제지/위생용품 위치","지상 2층 A-1구역에 있습니다.")
+def btn_cle():
+    messagebox.showinfo("청소/생활용품 위치","지상 2층 A-2구역에 있습니다.")
+def btn_hou():
+    messagebox.showinfo("가구/인테리어 위치","지상 2층 C구역에 있습니다.")
+def btn_kit():
+    messagebox.showinfo("주방용품 위치","지상 2층 A-3구역에 있습니다.")
+def btn_lif():
+    messagebox.showinfo("생활잡화/공구 위치","지상 2층 A-4구역에 있습니다.")
+def btn_pet():
+    messagebox.showinfo("반려동물 물품 위치","지상 2층 A-6구역에 있습니다.")
+def btn_bea():
+    messagebox.showinfo("뷰티용품 위치","지상 1층 출입구에 있습니다.")
+def btn_chi():
+    messagebox.showinfo("유아용품/완구 위치","지상 2층 A-5구역에 있습니다.")
+def btn_god():
+    messagebox.showinfo("잡화/명품 위치","지상 3층에 있습니다.")
+def btn_pas():
+    messagebox.showinfo("패션/언더웨어 위치","지상 2층 B구역에 있습니다.")
+def btn_spo():
+    messagebox.showinfo("스포츠/여행/자동차용품 위치","지상 2층 B구역에 있습니다.")
+def btn_dig():
+    messagebox.showinfo("디지털/가전/렌탈 위치","지상 2층 C구역에 있습니다.")
 
 def btn_2(): #물품 안내
     newWindow2 = tkinter.Toplevel(window)
@@ -113,63 +170,6 @@ def btn_5(): #주류 물품 안내
     btn_sports.grid(row=4, column=2)
     btn_back2.grid(row=4, column=3)
 
-def btn_fru():
-    messagebox.showinfo("과일 위치","지상 1층 A-1구역에 있습니다.")
-def btn_veg():
-    messagebox.showinfo("채소 위치","지상 1층 A-2구역에 있습니다.")
-def btn_ric():
-    messagebox.showinfo("쌀/잡곡/견과 위치","지상 1층 A-3구역에 있습니다.")
-def btn_mea():
-    messagebox.showinfo("정육/계란류 위치","지상 1층 A-4구역에 있습니다.")
-def btn_fis():
-    messagebox.showinfo("수산물/건어물/해산물 위치","지상 1층 A-5구역에 있습니다.")
-def btn_mil():
-    messagebox.showinfo("우유/유제품 위치","지상 1층 A-6구역에 있습니다.")
-def btn_mee():
-    messagebox.showinfo("밀키트/간편식류 위치","지상 1층 A-7구역에 있습니다.")
-def btn_kim():
-    messagebox.showinfo("김치/반찬/델리 위치","지상 1층 A-8구역에 있습니다.")
-def btn_wat():
-    messagebox.showinfo("생수/음료/주류","지상 1층 B-1구역에 있습니다.")
-def btn_cof():
-    messagebox.showinfo("커피/원두/차 위치","지상 1층 B-2구역에 있습니다.")
-def btn_nod():
-    messagebox.showinfo("면류/통조림 위치","지상 1층 B-3구역에 있습니다.")
-def btn_sau():
-    messagebox.showinfo("양념/오일 위치","지상 1층 B-4구역에 있습니다.")
-def btn_sna():
-    messagebox.showinfo("과자/간식 위치","지상 1층 B-5구역에 있습니다.")
-def btn_bre():
-    messagebox.showinfo("베이커리/잼 위치","지상 1층 B-6구역에 있습니다.")
-def btn_hea():
-    messagebox.showinfo("건강식품 위치","지상 1층 B-7구역에 있습니다.")
-def btn_eco():
-    messagebox.showinfo("친환경/유기농 위치","지상 1층 A-1 구역, A-2 구역에 있습니다.")
-
-def btn_tis():
-    messagebox.showinfo("제지/위생용품 위치","지상 2층 A-1구역에 있습니다.")
-def btn_cle():
-    messagebox.showinfo("청소/생활용품 위치","지상 2층 A-2구역에 있습니다.")
-def btn_hou():
-    messagebox.showinfo("가구/인테리어 위치","지상 2층 C구역에 있습니다.")
-def btn_kit():
-    messagebox.showinfo("주방용품 위치","지상 2층 A-3구역에 있습니다.")
-def btn_lif():
-    messagebox.showinfo("생활잡화/공구 위치","지상 2층 A-4구역에 있습니다.")
-def btn_pet():
-    messagebox.showinfo("반려동물 물품 위치","지상 2층 A-6구역에 있습니다.")
-def btn_bea():
-    messagebox.showinfo("뷰티용품 위치","지상 1층 출입구에 있습니다.")
-def btn_chi():
-    messagebox.showinfo("유아용품/완구 위치","지상 2층 A-5구역에 있습니다.")
-def btn_god():
-    messagebox.showinfo("잡화/명품 위치","지상 3층에 있습니다.")
-def btn_pas():
-    messagebox.showinfo("패션/언더웨어 위치","지상 2층 B구역에 있습니다.")
-def btn_spo():
-    messagebox.showinfo("스포츠/여행/자동차용품 위치","지상 2층 B구역에 있습니다.")
-def btn_dig():
-    messagebox.showinfo("디지털/가전/렌탈 위치","지상 2층 C구역에 있습니다.")
 
 
 label=tkinter.Label(window, text="환영합니다. 무엇을 도와드릴까요?", width=1500, height=2, fg="black", relief="solid",background="pink",
