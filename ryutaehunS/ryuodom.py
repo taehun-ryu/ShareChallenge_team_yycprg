@@ -77,13 +77,16 @@ def target_odo_move():
                 print(f'{left_vel},{right_vel},{front_disCm},{back}')
 
                 if front_disCm <=40:
-                    if sig != 1:
-                        go(0,0)
-                        sig = 1
+                    if sig != 5:
+                        if back:
+                            go(0,0)
+                        else:
+                            go(-10,-10)
+                        sig = 5
                     else:
                         print("Too Close")
                 else:
-                    if sig != 2:
+                    if sig != 6:
                         if left_vel - right_vel > 0 and left_vel - right_vel < 10:
                             go(right_vel - 7,left_vel + 7)
                         elif right_vel - left_vel > 0 and right_vel - left_vel < 10:
@@ -94,7 +97,7 @@ def target_odo_move():
                             go(right_vel,left_vel)
                         elif left_vel == right_vel:
                             go(left_vel,-right_vel)
-                        sig = 2
+                        sig = 6
                     else:
                         print("장애물 회피")
 
@@ -126,16 +129,16 @@ def target_odo_move():
                 if dist >5:
                     if ((target_theta-now_theta)>5):
                         if sig != 1:
-                            # go(0,0)
-                            # time.sleep(0.4)
+                            #go(0,0)
+                            #time.sleep(0.2)
                             go(20, -20)
                             sig = 1
                         else:
                             print("rrr")
                     elif((target_theta-now_theta)<-5):
                         if sig != 2:
-                            # go(0,0)
-                            # time.sleep(0.4)
+                            #go(0,0)
+                            #time.sleep(0.2)
                             go(-20, 20)
                             sig = 2
                         else:

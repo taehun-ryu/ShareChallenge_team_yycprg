@@ -144,12 +144,11 @@ if __name__ == '__main__':
         front_scan = ydlidar.LaserScan()
         back_scan = ydlidar.LaserScan()
 
-        left_vel_sum = 0
-        right_vel_sum = 0
-        left_cnt = 0
-        right_cnt = 0
+        left_vel = 0
+        right_vel = 0
+
         back_obstacle = 0
-        front_obstacle = 0
+
 
         while ret1 and ret2 and ydlidar.os_isOk():
             receiveLidarValue_front(type=True)
@@ -220,17 +219,36 @@ if __name__ == '__main__':
                 left_direction = 1 - left_index
                 right_direction = 1 - right_index
 
-                left_vel = left_direction * 60
-                right_vel = right_direction * 60
+                left_vel = left_direction * 50
+                right_vel = right_direction * 50
+                print(left_vel,right_vel)
 
                 if left_vel<10 and right_vel<10:
-                    left_vel +=10
-                    right_vel +=10
+                    left_vel =left_vel + 10
+                    right_vel = right_vel + 10
 
+                elif left_vel>=10 and right_vel<10 and right_vel <= 5:
+                    left_vel = left_vel + 5
+                    right_vel = 10
+                elif left_vel>=10 and right_vel<10 and right_vel > 5:
+                    left_vel = left_vel + (10 - right_vel)
+                    right_vel = 10
+
+                elif right_vel>=10 and left_vel<10 and left_vel <= 5:
+                    left_vel = 10
+                    right_vel = right_vel + 5
+                elif right_vel>=10 and left_vel<10 and left_vel > 5:
+                    left_vel = 10
+                    right_vel = right_vel + (10-right_vel)
+                    
+                elif left_vel<10 and right_vel>=10 :
+                    left_vel = 10
+                    right_vel = right_vel + (10 - left_vel)
+                   
                 velocity = f'{int(left_vel)}  {int(right_vel)}  {int(front_dis*100)} {back_obstacle}\r\n'
                 print(velocity)
-                left_vel_sum = 0
-                right_vel_sum = 0
+                left_vel = 0
+                right_vel = 0
                 left_cnt = 0
                 right_cnt = 0
 
