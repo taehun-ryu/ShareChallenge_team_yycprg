@@ -224,15 +224,15 @@ def target_odo_move():
 start_new_thread(recv_data, (client_socket,))
 print ('>> Connect Server')
 
-thread2 = threading.Thread(target=read_from_arduino2, daemon=True)
-thread2.start()
-# thread1 = threading.Thread(target=read_from_arduino, daemon=True)
-# thread1.start()
 if __name__ == "__main__":
     time.sleep(2)
     while True:
-            target_odo_move()
-            send(left_vel, right_vel)
-        # print(response)
+        thread1 = threading.Thread(target=read_from_arduino2, daemon=True)
+        #thread2 = threading.Thread(target=target_odo_move, daemon=True)
+        thread1.start()
+        #thread2.start()
+        #target_odo_move()
+        thread1.join(timeout = 1)
+        #thread2.join()
 
 client_socket.close()
