@@ -166,12 +166,12 @@ def target_odo_move():
 
                 dist = ((((target_x-now_x)**2)+((target_y-now_y)**2))**(1/2))
 
-                if dist >5:
+                if dist >40:
                     if ((target_theta-now_theta)>10):
                         if sig != 1:
                             go(0,0)
                             time.sleep(0.2)
-                            go(20, 5)
+                            go(20,-20)
                             sig = 1
                         else:
                             print("lll")
@@ -179,7 +179,7 @@ def target_odo_move():
                         if sig != 2:
                             go(0,0)
                             time.sleep(0.2)
-                            go(5, 20)
+                            go(-20, 20)
                             sig = 2
                         else:
                             print("rrr")
