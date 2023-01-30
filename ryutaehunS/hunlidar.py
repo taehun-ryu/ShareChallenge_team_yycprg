@@ -170,7 +170,7 @@ if __name__ == '__main__':
             back = []
             front = []
 
-            point_angle = [60, 40, 20, -20, -40, -60]
+            point_angle = [75, 50, 25, -25, -50, -75]
 
             for j, i in zip(front_ran_1, front_angle):
                 if i >= math.radians(point_angle[0]) or i <= math.radians(point_angle[5]):
@@ -219,8 +219,8 @@ if __name__ == '__main__':
                 left_direction = 1 - left_index
                 right_direction = 1 - right_index
 
-                left_vel = left_direction * 50
-                right_vel = right_direction * 50
+                left_vel = left_direction * 60
+                right_vel = right_direction * 60
                 print(left_vel,right_vel)
 
                 if left_vel<10 and right_vel<10:
