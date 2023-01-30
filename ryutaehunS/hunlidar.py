@@ -255,18 +255,19 @@ if __name__ == '__main__':
                 left_cnt = 0
                 right_cnt = 0
 
-            if data != None:
-                if int(front_dis*100) == 100:
-                    print("Go to target")
-                    if data_sig != 1:
-                        client_socket.send(data2)
-                        data_sig = 1
-                    else:
-                        pass
-                else:
-                    print("회피코드 동작",velocity)
-                    client_socket.send(velocity.encode())
-                    data_sig = 3
+            if data2 != None:
+                client_socket.send(data2)
+                # if int(front_dis*100) == 100:
+                #     print("Go to target")
+                #     if data_sig != 1:
+                #         client_socket.send(data2)
+                #         data_sig = 1
+                #     else:
+                #         pass
+                # else:
+                #     print("회피코드 동작",velocity)
+                #     client_socket.send(velocity.encode())
+                #     data_sig = 3
                     
 
 
