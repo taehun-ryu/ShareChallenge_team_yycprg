@@ -7,8 +7,6 @@ import math
 import socket
 from _thread import *
 
-from math import radians
-
 HOST = '127.0.0.1'
 PORT = 8000
 data = None
@@ -16,8 +14,14 @@ data_sig = None
 client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 client_socket.connect((HOST, PORT))
 
-port1 = "/dev/ttyUSB1"
-port2 = "/dev/ttyUSB0"
+HOST2 = '192.168.0.15'
+PORT2 = 8001
+data2 = None
+client_socket2 = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+client_socket2.connect((HOST2, PORT2))
+
+port1 = "/dev/ttyUSB1"  # front_liudar port
+port2 = "/dev/ttyUSB0"  # back_liudar port
 
 laser_front = ydlidar.CYdLidar()
 laser_front.setlidaropt(ydlidar.LidarPropSerialPort, port1)
@@ -38,19 +42,21 @@ laser_back.setlidaropt(ydlidar.LidarPropSampleRate, 9)
 laser_back.setlidaropt(ydlidar.LidarPropSingleChannel, False)
 
 #################################
-def recv_data(client_socket) :
+def recv_data(client_socket2) :
     while True :
-        global data
-        data = client_socket.recv(1024)
+        global data2
+        data2 = client_socket2.recv(1024)
 
-        print("recive : ",repr(data.decode()))
-start_new_thread(recv_data, (client_socket,))
+        print("recive : ",repr(data2.decode()))
+start_new_thread(recv_data, (client_socket2,))
 print ('>> Connect Server')
+
+
 
 # 전방 라이다 sensing
 # type: True -> 스캔 각도 제한
 # limit -> 스캔 거리 제한.
-def receiveLidarValue_front(type:bool=True,limit:float=None):
+def receiveLidarValue_front(type:bool=False,limit:float=None):
     global front_size , front_angle, front_ran
     r = laser_front.doProcessSimple(front_scan)
 
@@ -96,7 +102,7 @@ def receiveLidarValue_front(type:bool=True,limit:float=None):
         front_size = len(front_angle)
 
 # 후방 라이다 sensing
-def receiveLidarValue_back(type:bool=True,limit:float=None):
+def receiveLidarValue_back(type:bool=False,limit:float=None):
     global back_size, back_angle, back_ran
     r = laser_back.doProcessSimple(back_scan)
     if type:
@@ -133,7 +139,6 @@ def changeToXY(ran,angle,size):
         y = np.append(y,ran[i] * math.sin(angle[i]))
     return x,y
 
-
 if __name__ == '__main__':
     ret1 = laser_front.initialize()
     ret2 = laser_back.initialize()
@@ -145,76 +150,122 @@ if __name__ == '__main__':
         front_scan = ydlidar.LaserScan()
         back_scan = ydlidar.LaserScan()
 
-        left_vel_sum = 0
-        right_vel_sum = 0
-        left_cnt = 0
-        right_cnt = 0
+        left_vel = 0
+        right_vel = 0
+
+        back_obstacle = 0
+
 
         while ret1 and ret2 and ydlidar.os_isOk():
-
-            receiveLidarValue_front()
+            receiveLidarValue_front(type=True)
             receiveLidarValue_back()
 
             front_x, front_y = changeToXY(front_ran,front_angle,front_size)
             back_x, back_y = changeToXY(back_ran,back_angle,back_size)
 
-            left_0_30 = []
-            left_30_60 = []
-            left_60_90 = []
+            front_ran_1 = np.where((front_ran>1),1,front_ran)
 
-            right_0_30 = []
-            right_30_60 = []
-            right_60_90 = []
+            left_0_1 = []
+            left_1_2 = []
+            left_2_3 = []
 
-            for j, i in zip(front_ran, front_angle):
-                if i >= radians(90) or i <= radians(-90):
+            right_0_1 = []
+            right_1_2 = []
+            right_2_3 = []
+
+            back = []
+            front = []
+
+            point_angle = [75, 50, 25, -25, -50, -75]
+
+            for j, i in zip(front_ran_1, front_angle):
+                if i >= math.radians(point_angle[0]) or i <= math.radians(point_angle[5]):
                     continue
-                if j > 1.5:
-                    j = 1.5
 
-                if i >= radians(-90) and i <= radians(-60):
-                    left_60_90.append(j)
-                if i >= radians(-60) and i <= radians(-30):
-                    left_30_60.append(j)
-                if i >= radians(-30) and i <= radians(-0.0):
-                    left_0_30.append(j)
+                if i >= math.radians(point_angle[5]) and i <= math.radians(point_angle[4]):
+                    right_2_3.append(j)
+                if i >= math.radians(point_angle[4]) and i <= math.radians(point_angle[3]):
+                    right_1_2.append(j)
+                if i >= math.radians(point_angle[3]) and i <= math.radians(-0.0):
+                    right_0_1.append(j)
 
-                if i >= radians(+0.0) and i <= radians(30):
-                    right_0_30.append(j)
-                if i >= radians(30) and i <= radians(60):
-                    right_30_60.append(j)
-                if i >= radians(60) and i <= radians(90):
-                    right_60_90.append(j)
+                if i >= math.radians(+0.0) and i <= math.radians(point_angle[2]):
+                    left_0_1.append(j)
+                if i >= math.radians(point_angle[2]) and i <= math.radians(point_angle[1]):
+                    left_1_2.append(j)
+                if i >= math.radians(point_angle[1]) and i <= math.radians(point_angle[0]):
+                    left_2_3.append(j)
                 if j < 0:
                     print('err')
 
-            if len(left_0_30) != 0 and len(left_30_60) != 0 and len(left_60_90) != 0 and len(right_0_30) != 0 and len(right_30_60) != 0 and len(right_60_90) != 0:
-                left_0, left_1, left_2 = min(left_0_30), min(left_30_60), min(left_60_90)
-                right_0, right_1, right_2 = min(right_0_30), min(right_30_60), min(right_60_90)
+            for i,j in zip(back_x,back_y):
+                if i<0 and i>-0.5 and j <0.5 and j>-0.5:
+                    back_obstacle:int = 1
+                else:
+                    back_obstacle:int = 0
 
-                left_index = (2 * right_0 + right_1 + 0.3 * right_2) / (2 + 1 + 0.3)
-                right_index = (2 * left_0 + left_1 + 0.3 * left_2) / (2 + 1 + 0.3)
+            for i,j in zip(front_x,front_y):
+                if i<=1 and j <=0.3 and j>=-0.3:
+                    front.append(abs(i))
+                else:
+                    front.append(1)
+
+            front_dis= min(front)
+            
+            if len(left_0_1) != 0 and len(left_1_2) != 0 and len(left_2_3) != 0 and len(right_0_1) != 0 and len(right_1_2) != 0 and len(right_2_3) != 0:
+
+                left_0, left_1, left_2 = min(left_0_1), min(left_1_2), min(left_2_3)
+                right_0, right_1, right_2 = min(right_0_1), min(right_1_2), min(right_2_3)
+
+                left_index = (2 * left_0 + left_1 + 0.3 * left_2) / (2 + 1 + 0.3)
+                right_index = (2 * right_0 + right_1 + 0.3 * right_2) / (2 + 1 + 0.3)
 
 
-                left_direction = 1.5 - left_index
-                right_direction = 1.5 - right_index
+                left_direction = 1 - left_index
+                right_direction = 1 - right_index
+                
+                left_vel = left_direction * 60
+                right_vel = right_direction * 60
 
+                if left_vel<10 and right_vel<10:
+                    left_vel =left_vel + 10
+                    right_vel = right_vel + 10
 
-                left_vel_sum = left_vel_sum + left_direction
-                left_cnt = left_cnt + 1
-                right_vel_sum = right_vel_sum + right_direction
+                elif left_vel>=10 and right_vel<10 and right_vel <= 5:
+                    left_vel = left_vel + 5
+                    right_vel = 10
+                elif left_vel>=10 and right_vel<10 and right_vel > 5:
+                    left_vel = left_vel + (10 - right_vel)
+                    right_vel = 10
 
-                if left_cnt >= 2:
-                    left_vel = f'LL{int((left_vel_sum/left_cnt) * 30)}  '
-                    right_vel = f'RR{int((right_vel_sum/left_cnt) * 30)}  '
+                elif right_vel>=10 and left_vel<10 and left_vel <= 5:
+                    left_vel = 10
+                    right_vel = right_vel + 5
+                elif right_vel>=10 and left_vel<10 and left_vel > 5:
+                    left_vel = 10
+                    right_vel = right_vel + (10-right_vel)
+                    
+                elif left_vel<10 and right_vel>=10 :
+                    left_vel = 10
+                    right_vel = right_vel + (10 - left_vel)
+                   
+                velocity = f'{int(left_vel)}  {int(right_vel)}  {int(front_dis*100)} {back_obstacle}\r\n'
+                left_vel = 0
+                right_vel = 0
+                left_cnt = 0
+                right_cnt = 0
 
-                    client_socket.send(left_vel.encode())
-                    client_socket.send(right_vel.encode())
+            if data2 != None:
+                
+                if int(front_dis*100) == 100:
+                    print("Go to target")
+                    client_socket.send(data2)
+                else:
+                    print("회피코드 동작",velocity)
+                    client_socket.send(velocity.encode())
 
-                    left_vel_sum = 0
-                    right_vel_sum = 0
-                    left_cnt = 0
-                    right_cnt = 0
+                    
+
 
         ret1 = laser_front.turnOff()
         ret2 = laser_back.turnOff()
