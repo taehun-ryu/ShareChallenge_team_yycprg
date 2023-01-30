@@ -14,6 +14,12 @@ data_sig = None
 client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 client_socket.connect((HOST, PORT))
 
+HOST2 = '192.168.0.15'
+PORT2 = 8001
+data2 = None
+client_socket2 = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+client_socket2.connect((HOST2, PORT2))
+
 port1 = "/dev/ttyUSB1"  # front_liudar port
 port2 = "/dev/ttyUSB0"  # back_liudar port
 
@@ -36,13 +42,13 @@ laser_back.setlidaropt(ydlidar.LidarPropSampleRate, 9)
 laser_back.setlidaropt(ydlidar.LidarPropSingleChannel, False)
 
 #################################
-def recv_data(client_socket) :
+def recv_data(client_socket2) :
     while True :
-        global data
-        data = client_socket.recv(1024)
+        global data2
+        data2 = client_socket2.recv(1024)
 
-        print("recive : ",repr(data.decode()))
-start_new_thread(recv_data, (client_socket,))
+        print("recive : ",repr(data2.decode()))
+start_new_thread(recv_data, (client_socket2,))
 print ('>> Connect Server')
 
 
@@ -206,7 +212,6 @@ if __name__ == '__main__':
 
             front_dis= min(front)
             
-
             if len(left_0_1) != 0 and len(left_1_2) != 0 and len(left_2_3) != 0 and len(right_0_1) != 0 and len(right_1_2) != 0 and len(right_2_3) != 0:
 
                 left_0, left_1, left_2 = min(left_0_1), min(left_1_2), min(left_2_3)
@@ -221,7 +226,6 @@ if __name__ == '__main__':
                 
                 left_vel = left_direction * 60
                 right_vel = right_direction * 60
-                print(left_vel,right_vel)
 
                 if left_vel<10 and right_vel<10:
                     left_vel =left_vel + 10
@@ -246,7 +250,6 @@ if __name__ == '__main__':
                     right_vel = right_vel + (10 - left_vel)
                    
                 velocity = f'{int(left_vel)}  {int(right_vel)}  {int(front_dis*100)} {back_obstacle}\r\n'
-                print(velocity)
                 left_vel = 0
                 right_vel = 0
                 left_cnt = 0
@@ -256,7 +259,7 @@ if __name__ == '__main__':
                 if int(front_dis*100) == 100:
                     print("Go to target")
                     if data_sig != 1:
-                        client_socket.send(data)
+                        client_socket.send(data2)
                         data_sig = 1
                     else:
                         pass

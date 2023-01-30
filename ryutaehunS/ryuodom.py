@@ -35,6 +35,7 @@ data = None
 client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 client_socket.connect((HOST, PORT))
 
+
 def go(s,S):
     munja =f's{s}\r\nS{S}\r\n'
     py_serial.write(munja.encode())
@@ -45,7 +46,8 @@ def recv_data(client_socket) :
         global data
         data = client_socket.recv(1024)
 
-        #print("recive : ",repr(data.decode()))
+        print("recive : ",repr(data.decode()))
+
 def read_from_arduino2():
     global response
     while True:
@@ -172,31 +174,31 @@ def target_odo_move():
                         if sig != 1:
                             go(0,0)
                             time.sleep(0.2)
-                            go(20,-20)
+                            go(20,10)
                             sig = 1
                         else:
-                            print("lll")
+                            print("rrr")
                     elif((target_theta-now_theta)<-10):
                         if sig != 2:
                             go(0,0)
                             time.sleep(0.2)
 
-                            go(-20, 20)
+                            go(10, 20)
                             sig = 2
                         else:
-                            print("rrr")
+                            print("lll")
                     else:
                         if sig != 3:
                             go(20, 20)
                             sig = 3
                         else:
-                            print("ggg")
+                            print("타깃 직전")
                 else:
-                        if sig != 4:
-                            go(0, 0)
-                            sig = 4
-                        else:
-                            print("ststst")
+                    if sig != 4:
+                        go(0, 0)
+                        sig = 4
+                    else:
+                        print("타깃 도착")
 
 # def read_from_arduino():
 #     global response

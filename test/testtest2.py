@@ -1,8 +1,8 @@
 import socket
 from _thread import *
 
-HOST = '127.0.0.1'
-PORT = 8000
+HOST = '192.168.0.15'
+PORT = 8001
 data = None
 client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 client_socket.connect((HOST, PORT))
