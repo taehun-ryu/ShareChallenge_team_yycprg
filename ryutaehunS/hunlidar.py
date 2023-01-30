@@ -221,29 +221,6 @@ if __name__ == '__main__':
 
                 left_vel = left_direction * 50
                 right_vel = right_direction * 50
-                print(left_vel,right_vel)
-
-                if left_vel<10 and right_vel<10:
-                    left_vel =left_vel + 10
-                    right_vel = right_vel + 10
-
-                elif left_vel>=10 and right_vel<10 and right_vel <= 5:
-                    left_vel = left_vel + 5
-                    right_vel = 10
-                elif left_vel>=10 and right_vel<10 and right_vel > 5:
-                    left_vel = left_vel + (10 - right_vel)
-                    right_vel = 10
-
-                elif right_vel>=10 and left_vel<10 and left_vel <= 5:
-                    left_vel = 10
-                    right_vel = right_vel + 5
-                elif right_vel>=10 and left_vel<10 and left_vel > 5:
-                    left_vel = 10
-                    right_vel = right_vel + (10-right_vel)
-                    
-                elif left_vel<10 and right_vel>=10 :
-                    left_vel = 10
-                    right_vel = right_vel + (10 - left_vel)
                    
                 velocity = f'{int(left_vel)}  {int(right_vel)}  {int(front_dis*100)} {back_obstacle}\r\n'
                 print(velocity)

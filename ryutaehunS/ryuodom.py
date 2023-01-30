@@ -62,6 +62,8 @@ def target_odo_move():
 
     global left_vel_dodge
     global right_vel_dodge
+    global while_sig,flag,flag_time
+
     if data != None:
         commend = data.decode()
         text= response.decode()
@@ -82,40 +84,64 @@ def target_odo_move():
                         sig = 5
                     else:
                         print("Too Close")
-                else:
+
+                elif front_disCm < 100:
+                    max_time = time.time()
+                    while while_sig:
+                        if time.time() - max_time > 1:
+                            while_sig = False
+                            flag = True
+                            max_time = time.time()
+                            flag_time = time.time()
+                            break
+                        else:
+                            if sig != 13:
+                                go(0,0)
+                                sig = 13
+                            else:
+                                print("일단 정지")
+                    
+                    flag_time = time.time()
+                    if flag and time.time() - flag_time >3:
+                        while_sig = True
+                        flag = False
+                    
+
                     if left_vel - right_vel > 0 and left_vel - right_vel < 10:
                         if sig != 6:
                             go(right_vel - 7,left_vel + 7)
                             sig = 6
-                    else:
-                        print("LLLLLLLLLLLLL")
+                        else:
+                            print("LLLLLLLLLLLLL")
                     elif right_vel - left_vel > 0 and right_vel - left_vel < 10:
                         if sig != 7:
                             go(right_vel + 7,left_vel - 7)
                             sig = 7
-                    else:
-                        print("RRRRRRRRRRRRR")
+                        else:
+                            print("RRRRRRRRRRRRR")
                     elif left_vel - right_vel > 0 and left_vel - right_vel > 10:
                         if sig != 8:
                             go(right_vel,left_vel)
                             sig = 9
-                    else:
-                        print("LLL")
+                        else:
+                            print("LLL")
                     elif right_vel - left_vel > 0 and right_vel - left_vel > 10:
                         if sig != 10:
                             go(right_vel,left_vel)
                             sig = 11
-                    else:
-                        print("RRR")
+                        else:
+                            print("RRR")
                     elif left_vel == right_vel:
                         if sig != 12:
                             go(5,-5)
                             sig = 12
-                    else:
-                        print("시발")
+                        else:
+                            print("시발")
 
                     else:
                         print("장애물 회피")
+                else:
+                    while_sig = True
 
             elif len(ta)==2:
                 now_x, now_y=m[2],m[3]
@@ -142,19 +168,19 @@ def target_odo_move():
 
                 dist = ((((target_x-now_x)**2)+((target_y-now_y)**2))**(1/2))
 
-                if dist >5:
-                    if ((target_theta-now_theta)>5):
+                if dist >40:
+                    if ((target_theta-now_theta)>15):
                         if sig != 1:
-                            #go(0,0)
-                            #time.sleep(0.2)
+                            go(0,0)
+                            time.sleep(0.4)
                             go(20, -20)
                             sig = 1
                         else:
                             print("rrr")
-                    elif((target_theta-now_theta)<-5):
+                    elif((target_theta-now_theta)<-15):
                         if sig != 2:
-                            #go(0,0)
-                            #time.sleep(0.2)
+                            go(0,0)
+                            time.sleep(0.4)
                             go(-20, 20)
                             sig = 2
                         else:
@@ -188,7 +214,9 @@ thread2.start()
 # thread1 = threading.Thread(target=read_from_arduino, daemon=True)
 # thread1.start()
 if __name__ == "__main__":
-
+    while_sig = True
+    flag = False
+    flag_time = 0
     while True:
             target_odo_move()
         # print(response)
