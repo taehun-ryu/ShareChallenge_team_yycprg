@@ -218,7 +218,7 @@ if __name__ == '__main__':
 
                 left_direction = 1 - left_index
                 right_direction = 1 - right_index
-
+                
                 left_vel = left_direction * 60
                 right_vel = right_direction * 60
                 print(left_vel,right_vel)
