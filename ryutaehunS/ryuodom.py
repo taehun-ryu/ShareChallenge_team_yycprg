@@ -78,26 +78,42 @@ def target_odo_move():
 
                 if front_disCm <=40:
                     if sig != 5:
-                        if back:
-                            go(0,0)
-                        else:
-                            go(-10,-10)
+                        go(0,0)
                         sig = 5
                     else:
                         print("Too Close")
                 else:
-                    if sig != 6:
-                        if left_vel - right_vel > 0 and left_vel - right_vel < 10:
+                    if left_vel - right_vel > 0 and left_vel - right_vel < 10:
+                        if sig != 6:
                             go(right_vel - 7,left_vel + 7)
-                        elif right_vel - left_vel > 0 and right_vel - left_vel < 10:
+                            sig = 6
+                    else:
+                        print("LLLLLLLLLLLLL")
+                    elif right_vel - left_vel > 0 and right_vel - left_vel < 10:
+                        if sig != 7:
                             go(right_vel + 7,left_vel - 7)
-                        elif left_vel - right_vel > 0 and left_vel - right_vel > 10:
+                            sig = 7
+                    else:
+                        print("RRRRRRRRRRRRR")
+                    elif left_vel - right_vel > 0 and left_vel - right_vel > 10:
+                        if sig != 8:
                             go(right_vel,left_vel)
-                        elif right_vel - left_vel > 0 and right_vel - left_vel > 10:
+                            sig = 9
+                    else:
+                        print("LLL")
+                    elif right_vel - left_vel > 0 and right_vel - left_vel > 10:
+                        if sig != 10:
                             go(right_vel,left_vel)
-                        elif left_vel == right_vel:
-                            go(left_vel,-right_vel)
-                        sig = 6
+                            sig = 11
+                    else:
+                        print("RRR")
+                    elif left_vel == right_vel:
+                        if sig != 12:
+                            go(5,-5)
+                            sig = 12
+                    else:
+                        print("시발")
+
                     else:
                         print("장애물 회피")
 
