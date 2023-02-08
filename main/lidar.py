@@ -6,6 +6,7 @@ import numpy as np
 import math
 import socket
 from _thread import *
+import re
 
 HOST = '127.0.0.1'
 PORT = 8000
@@ -14,9 +15,10 @@ data_sig = None
 client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 client_socket.connect((HOST, PORT))
 
-HOST2 = '192.168.0.15'
+HOST2 = '172.17.69.18'
 PORT2 = 8001
 data2 = None
+data2_sig = None
 client_socket2 = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 client_socket2.connect((HOST2, PORT2))
 
@@ -45,7 +47,7 @@ laser_back.setlidaropt(ydlidar.LidarPropSingleChannel, False)
 def recv_data(client_socket2) :
     while True :
         global data2
-        data2 = client_socket2.recv(1024)
+        data2= client_socket2.recv(1024)
 
         print("recive : ",repr(data2.decode()))
 start_new_thread(recv_data, (client_socket2,))
@@ -163,7 +165,8 @@ if __name__ == '__main__':
             front_x, front_y = changeToXY(front_ran,front_angle,front_size)
             back_x, back_y = changeToXY(back_ran,back_angle,back_size)
 
-            front_ran_1 = np.where((front_ran>1),1,front_ran)
+            front_limit = 0.8
+            front_ran_1 = np.where((front_ran>front_limit),front_limit,front_ran)
 
             left_0_1 = []
             left_1_2 = []
@@ -175,8 +178,9 @@ if __name__ == '__main__':
 
             back = []
             front = []
+            
 
-            point_angle = [75, 50, 25, -25, -50, -75]
+            point_angle = [60,40,20,-20,-40,-60]
 
             for j, i in zip(front_ran_1, front_angle):
                 if i >= math.radians(point_angle[0]) or i <= math.radians(point_angle[5]):
@@ -205,10 +209,10 @@ if __name__ == '__main__':
                     back_obstacle:int = 0
 
             for i,j in zip(front_x,front_y):
-                if i<=1 and j <=0.3 and j>=-0.3:
+                if i<2 and j <=0.3 and j>=-0.3:
                     front.append(abs(i))
                 else:
-                    front.append(1)
+                    front.append(2)
 
             front_dis= min(front)
             
@@ -221,49 +225,24 @@ if __name__ == '__main__':
                 right_index = (2 * right_0 + right_1 + 0.3 * right_2) / (2 + 1 + 0.3)
 
 
-                left_direction = 1 - left_index
-                right_direction = 1 - right_index
+                left_direction = abs(front_limit - left_index)
+                right_direction = abs(front_limit - right_index)
                 
-                left_vel = left_direction * 60
-                right_vel = right_direction * 60
+                left_vel = left_direction * 90
+                right_vel = right_direction * 90
 
-                if left_vel<10 and right_vel<10:
-                    left_vel =left_vel + 10
-                    right_vel = right_vel + 10
+                if data2 != None:
+                    commend = data2.decode() 
+                    ta=[float(tas) for tas in re.findall(r'-?\d+\.?\d*', commend)]
+                    x,y = ta[0],ta[1]
+                    inform = f'{x}  {y}  {int(left_vel)}  {int(right_vel)}  {int(front_dis*100)} {back_obstacle}\r\n'
+                    client_socket.send(inform.encode())
+                    print(inform)
 
-                elif left_vel>=10 and right_vel<10 and right_vel <= 5:
-                    left_vel = left_vel + 5
-                    right_vel = 10
-                elif left_vel>=10 and right_vel<10 and right_vel > 5:
-                    left_vel = left_vel + (10 - right_vel)
-                    right_vel = 10
-
-                elif right_vel>=10 and left_vel<10 and left_vel <= 5:
-                    left_vel = 10
-                    right_vel = right_vel + 5
-                elif right_vel>=10 and left_vel<10 and left_vel > 5:
-                    left_vel = 10
-                    right_vel = right_vel + (10-right_vel)
-                    
-                elif left_vel<10 and right_vel>=10 :
-                    left_vel = 10
-                    right_vel = right_vel + (10 - left_vel)
-                   
-                velocity = f'{int(left_vel)}  {int(right_vel)}  {int(front_dis*100)} {back_obstacle}\r\n'
                 left_vel = 0
                 right_vel = 0
                 left_cnt = 0
                 right_cnt = 0
-
-            if data2 != None:
-                
-                if int(front_dis*100) == 100:
-                    print("Go to target")
-                    client_socket.send(data2)
-                else:
-                    print("회피코드 동작",velocity)
-                    client_socket.send(velocity.encode())
-
                     
 
 

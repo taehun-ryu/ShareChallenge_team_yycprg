@@ -1,7 +1,7 @@
 import socket
 from _thread import *
 
-HOST = '172.17.69.18'
+HOST = '192.168.0.8'
 PORT = 8001
 data = None
 data_sig = None

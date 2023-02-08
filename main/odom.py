@@ -74,86 +74,65 @@ def target_odo_move():
         if len(m) == 5:
             now_x, now_y=m[2],m[3]
             now_theta=m[4]
+
             ta=[float(tas) for tas in re.findall(r'-?\d+\.?\d*', commend)]#문자열에서 숫자추출
-            #print(len(ta))
-            if len(ta) ==4:
-                left_vel, right_vel,front_disCm, back = ta[0],ta[1],ta[2],ta[3]
-                print(f'{left_vel},{right_vel},{front_disCm},{back}')
 
-                if front_disCm <=40:
-                    if sig!=5:
-                        go(0,0)
-                        sig = 5
-                    else:
-                        print("Too Close")
+            target_x, target_y, left_vel, right_vel,front_disCm, back = ta[0],ta[1],ta[2],ta[3],ta[4],ta[5]
+            print(f'{target_x} {target_y} {left_vel},{right_vel},{front_disCm},{back}')
+
+            if target_x - now_x == 0:
+                if target_y-now_y < 0:
+                    target_theta = -90
+                elif target_y-now_y > 0:
+                    target_theta = 90
                 else:
-                    if left_vel > right_vel:
-                        go(0,20)
-                    elif left_vel < right_vel:
-                        go(20,0)
-                    else:
-                        go(10,-10)
+                    target_theta = 0
+            else:
+                target_theta=math.atan((target_y-now_y)/(target_x-now_x))*180/PI#각도구하기 '도'
+            if now_theta > 360:
+                for i in range(int((now_theta)/360)):
+                    now_theta = now_theta-360*(i+1)
+            elif now_theta < -360:
+                for i in range(int((now_theta)/(-360))):
+                    now_theta = now_theta+360*(i+1)
 
-            elif len(ta)==2:
-                now_x, now_y=m[2],m[3]
-                now_theta=m[4]
+            dist = ((((target_x-now_x)**2)+((target_y-now_y)**2))**(1/2))
 
-                target_x,target_y = ta[0],ta[1]
-                print(target_x,target_y)
-                #######################################
-                if target_x - now_x == 0:
-                    if target_y-now_y < 0:
-                        target_theta = -90
-                    elif target_y-now_y > 0:
-                        target_theta = 90
-                    else:
-                        target_theta = 0
+            if front_disCm <=25:
+                if sig!=5:
+                    go(0,0)
+                    sig = 5
                 else:
-                    target_theta=math.atan((target_y-now_y)/(target_x-now_x))*180/PI#각도구하기 '도'
-                if now_theta > 360:
-                    for i in range(int((now_theta)/360)):
-                        now_theta = now_theta-360*(i+1)
-                elif now_theta < -360:
-                    for i in range(int((now_theta)/(-360))):
-                        now_theta = now_theta+360*(i+1)
+                    print("Too Close")
+            if dist > 100:
+                print("장애물 회피하면서 타깃 좌표로 스스로 이동하는거 보여주면 좋음")
 
-                dist = ((((target_x-now_x)**2)+((target_y-now_y)**2))**(1/2))
-
-                if dist >10:
-                    if ((target_theta-now_theta)>7):
-                        if sig != 1:
-                            go(20,-20)
-                            sig = 1
-                        else:
-                            print("rrr")
-                    elif((target_theta-now_theta)<-7):
-                        if sig != 2:
-
-                            go(-20, 20)
-                            sig = 2
-                        else:
-                            print("lll")
+            elif dist>10:
+                if ((target_theta-now_theta)>7):
+                    if sig != 1:
+                        go(20,-20)
+                        sig = 1
                     else:
-                        if sig != 3:
-                            go(20, 20)
-                            sig = 3
-                        else:
-                            print("타깃 직전")
+                        print("rrr")
+                elif((target_theta-now_theta)<-7):
+                    if sig != 2:
+                        go(-20, 20)
+                        sig = 2
+                    else:
+                        print("lll")
                 else:
-                    if sig != 4:
-                        go(0, 0)
-                        sig = 4
+                    if sig != 3:
+                        go(20, 20)
+                        sig = 3
                     else:
-                        print("타깃 도착")
+                        print("타깃 직전")
+            else:
+                if sig !=4:
+                    go(0,0)
+                    sig = 4
+                else:
+                    print("타깃 도착")
 
-# def read_from_arduino():
-#     global response
-#     while True:
-#         if py_serial.readable():
-#             response = py_serial.readline()
-#             print(response)
-#         else:
-#             pass
 start_new_thread(recv_data, (client_socket,))
 print ('>> Connect Server')
 
