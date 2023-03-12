@@ -6,15 +6,15 @@
 ---
 ### Responsible field
 #### [류태훈(Taehun Ryu)](https://github.com/taehun-ryu):
-Perception, Planning, Control System
+Perception, Planning
 #### [박하윤](https://github.com/parkhy0106):
-Vision System using [Yolov7](https://github.com/WongKinYiu/yolov7), Communication System, Electrical part
+Vision System using [Yolov7](https://github.com/WongKinYiu/yolov7)
 #### [유연철](https://github.com/YouYCJS):
-Hardware, Interface, Electrical part
+Hardware, GUI interface
 #### 이기검:
-Control System, Localization, Communication System
+Planning, Control
 #### 김민표:
-Hardware, Localization, Electrical part
+Hardware, Electrical part
 
 ---
 
