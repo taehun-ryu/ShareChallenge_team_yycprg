@@ -11,7 +11,7 @@ Perception, Planning
 Vision System using [Yolov7](https://github.com/WongKinYiu/yolov7)
 #### [유연철](https://github.com/YouYCJS):
 Hardware, GUI interface
-#### 이기검:
+#### [이기검](https://github.com/geegum):
 Planning, Control
 #### 김민표:
 Hardware, Electrical part
