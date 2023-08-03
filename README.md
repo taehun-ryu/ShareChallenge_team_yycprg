@@ -19,6 +19,6 @@ Hardware, Electrical part
 ---
 
 ## Abstract
-I write story in [my blog](https://taehun-ryu.github.io/portfolio/share_challange/).
+We write story in [taehun's blog](https://taehun-ryu.github.io/portfolio/share_challange/).
 
 Thanks!
