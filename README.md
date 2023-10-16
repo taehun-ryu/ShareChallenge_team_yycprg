@@ -19,6 +19,4 @@ Hardware, Electrical part
 ---
 
 ## Abstract
-We write story in [taehun's blog](https://taehun-ryu.github.io/portfolio/share_challange/).
-
-Thanks!
+This repository does not contain vision system code. Sorry about that.
