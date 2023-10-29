@@ -6,7 +6,7 @@
 ---
 ### Responsible field
 #### [류태훈(Taehun Ryu)](https://github.com/taehun-ryu):
-Perception, Planning
+Localization, Obstacle Avoidance Algorithm
 #### [박하윤](https://github.com/parkhy0106):
 Vision System using [Yolov7](https://github.com/WongKinYiu/yolov7)
 #### [유연철](https://github.com/YouYCJS):
